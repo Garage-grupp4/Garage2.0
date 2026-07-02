@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 namespace Garage2._0
 {
     public class Program
@@ -5,6 +6,9 @@ namespace Garage2._0
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString("_1") ?? throw new InvalidOperationException("Connection string '_1' not found.");
+
+            builder.Services.AddDbContext<_1>(options => options.UseSqlite(connectionString));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -27,7 +31,7 @@ namespace Garage2._0
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=ParkedVehicles}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
             app.Run();
