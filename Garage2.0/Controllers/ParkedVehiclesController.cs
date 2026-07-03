@@ -15,7 +15,17 @@ public class ParkedVehiclesController : Controller
     // GET: PARKEDVEHICLES
     public async Task<IActionResult> Index()    
     {
-        return View(await _context.ParkedVehicle.ToListAsync());
+        var vehicles = await _context.ParkedVehicle.ToListAsync();
+
+        var viewModel = vehicles.Select(v => new VehicleOverViewModel
+        {
+            Id = v.Id,
+            RegistrationNumber = v.registrationNumber,
+            VehicleType = v.vehicleType,
+            ArrivalTime = v.arrivalTime ?? DateTime.Now
+        }).ToList();
+
+        return View(viewModel);
     }
 
     // GET: PARKEDVEHICLES/Details/5
@@ -146,4 +156,5 @@ public class ParkedVehiclesController : Controller
     {
         return _context.ParkedVehicle.Any(e => e.Id == id);
     }
+
 }
