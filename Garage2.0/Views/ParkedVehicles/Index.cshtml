@@ -1,77 +1,39 @@
-@model IEnumerable<Garage2._0.Models.ParkedVehicle>
+@model IEnumerable<Garage2._0.Models.VehicleOverViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Garage Overview";
 }
 
-<h1>Index</h1>
+<h1>Parked Vehicle</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Park Vehicle</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RegistrationNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArrivalTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleModel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleBrand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DepartureTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Wheels)
-            </th>
+            <th>Vehicle Type</th>
+            <th>Registration number</th>
+            <th>Arrival time</th>
+            <th>Time Parked</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.RegistrationNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ArrivalTime)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.VehicleType)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.VehicleModel)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.VehicleBrand)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DepartureTime)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Wheels)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach(var item in Model)
+        {
+         <tr>
+             <td>@item.VehicleType</td>
+             <td>@item.RegistrationNumber</td>
+             <td>@item.ArrivalTime</td>
+             <td>@item.ParkedDuration</td>
+             <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Leave Parking</a>
+             </td>
+         </tr>   
+        }
     </tbody>
 </table>
