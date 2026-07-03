@@ -4,9 +4,8 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Park New Vehicle</h1>
 
-<h4>ParkedVehicle</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -44,13 +43,14 @@
 
             <div class="form-group">
                 <label asp-for="Color" class="control-label" ></label>
+                <br/>
                 <input type="color" asp-for="Color" />
                 <span asp-validation-for="Color" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="wheels" class="control-label" ></label>
-                <input asp-for="wheels" class="form-control" value="4" required />
+                <input asp-for="wheels" class="form-control" value="4" min="0" max="64" required />
                 <span asp-validation-for="wheels" class="text-danger"></span>
             </div>
             <div class="form-group">

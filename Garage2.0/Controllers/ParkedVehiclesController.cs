@@ -68,7 +68,7 @@ public class ParkedVehiclesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(newParkedVehicle);
+        return View();
     }
     
     [AcceptVerbs("GET", "POST")]
