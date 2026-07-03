@@ -1,7 +1,9 @@
 
+using System.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Garage2._0.Models;
+using Garage2._0.Models.ViewModels;
 
 public class ParkedVehiclesController : Controller
 {
@@ -47,15 +49,37 @@ public class ParkedVehiclesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,registrationNumber,arrivalTime,vehicleType,vehicleModel,vehicleBrand,departureTime,color,wheels")] ParkedVehicle parkedvehicle)
+    public async Task<IActionResult> Create(CreateParkedVehicleViewModel model)
     {
+
+        ParkedVehicle newParkedVehicle = new ParkedVehicle()
+        {
+            ArrivalTime = DateTime.Now,
+            RegistrationNumber = model.RegistrationNumber,
+            VehicleBrand = model.VehicleBrand,
+            VehicleModel = model.VehicleModel,
+            VehicleType = model.VehicleType,
+            Color = model.Color,
+            Wheels = model.wheels
+        };
         if (ModelState.IsValid)
         {
-            _context.Add(parkedvehicle);
+            _context.Add(newParkedVehicle);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(parkedvehicle);
+        return View();
+    }
+    
+    [AcceptVerbs("GET", "POST")]
+    public async Task<IActionResult> VerifyRegistrationNumber(string registationNumber)
+    {
+        IEnumerable<ParkedVehicle> list = await _context.ParkedVehicle.ToListAsync();
+        if (list.Any(v => v.RegistrationNumber == registationNumber))
+        {
+            return Json($"Email {registationNumber} is already in use.");
+        }
+        return Json(true);
     }
 
     // GET: PARKEDVEHICLES/Edit/5
