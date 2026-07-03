@@ -71,6 +71,18 @@ dotnet ef database update
 dotnet run
 ```
 
+## Test-data
+
+Den lokala databasen (`_1.db`) är **inte** versionshanterad — varje utvecklare har sin egen.
+
+För att fylla en tom databas med test-fordon (5 st med olika färger, typer och ankomsttider):
+
+```bash
+sqlite3 Garage2.0/_1.db < Garage2.0/SeedData/test-vehicles.sql
+```
+
+Testdatan är bra för att verifiera detaljvyn (färgruta, parkerad tid) och översiktsvyn utan att behöva parkera fordon manuellt via UI.
+
 ## Tech stack
 
 - ASP.NET Core MVC
