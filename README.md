@@ -6,9 +6,9 @@ ASP.NET Core MVC-baserad garageapplikation. Första MVC-versionen av garaget —
 
 | Namn | Ansvarsområde |
 |------|---------------|
-| Peter Laan | – |
-| Fredrik Selander | – |
-| George Cristian Ciolponea | – |
+| Peter Laan | Issue 2: Översiktsvyn |
+| Fredrik Selander | Issue 1: Parkera/checka in-vyn |
+| George Cristian Ciolponea | Issue 4: Edit-vyn |
 | Javier Diaz Urbano | Issue 3: Detaljvyn |
 
 ## Grundflöde
@@ -31,14 +31,14 @@ En enda modell: `ParkedVehicle` med följande properties:
 
 | # | Arbetskort | Ansvarig | Status |
 |---|------------|----------|--------|
-| – | Gemensam uppstart | Alla | Ej startad |
-| – | Gemensam singelmodell | Alla | Ej startad |
-| – | Migrationer & lokal databas | Alla | Ej startad |
-| – | Scaffoldad controller & vyer | Alla | Ej startad |
-| 1 | [Anpassa parkera/checka in-vyn](issues/issue-01-parkera.md) | – | Ej startad |
-| 2 | [Anpassa översiktsvyn](issues/issue-02-oversikt.md) | – | Ej startad |
-| 3 | [Anpassa detaljvyn](issues/issue-03-detaljvyn.md) | **Javier** | Ej startad |
-| 4 | [Anpassa edit-vyn](issues/issue-04-edit.md) | – | Ej startad |
+| – | Gemensam uppstart | Alla | Klar |
+| – | Gemensam singelmodell | Alla | Klar |
+| – | Migrationer & lokal databas | Alla | Klar |
+| – | Scaffoldad controller & vyer | Alla | Klar |
+| 1 | [Anpassa parkera/checka in-vyn](issues/issue-01-parkera.md) | **Fredrik** | Pågår |
+| 2 | [Anpassa översiktsvyn](issues/issue-02-oversikt.md) | **Peter** | Pågår |
+| 3 | [Anpassa detaljvyn](issues/issue-03-detaljvyn.md) | **Javier** | För Review |
+| 4 | [Anpassa edit-vyn](issues/issue-04-edit.md) | **George** | Pågår |
 | 5 | [Hämta ut / checka ut](issues/issue-05-checkout.md) | – | Ej startad |
 | 6 | [Kvitto](issues/issue-06-kvitto.md) | – | Ej startad |
 | 7 | [Sökning](issues/issue-07-sokning.md) | – | Ej startad |
@@ -49,8 +49,8 @@ En enda modell: `ParkedVehicle` med följande properties:
 
 ## Git-strategi
 
-- Branch per issue (`feature/issue-3-detaljvyn` etc.)
-- PR till `development` — inte direkt till `main`
+- Feature branch per issue — mönster: `issue{N}-{beskrivning}-{namn}` (t.ex. `issue3-Details-javier`)
+- PR till `development` — inte direkt till `master`
 - `git pull --rebase origin development` innan push för ren historik
 - Prata med gruppen innan ändringar i delade delar (modell, propertynamn, fordonstyper, prisregel, actions/vyer)
 
