@@ -1,11 +1,12 @@
-@model Garage2._0.Models.ParkedVehicle
+@model Garage2._0.Models.ViewModels.CreateParkedVehicleViewModel
 
 @{
     ViewData["Title"] = "Create";
     string? selectedType;
-    byte red =128;
-    byte blue =128;
-    byte green = 128;
+    
+  //  byte red = byte.Parse(Context.Request.Query["red"]);
+//    byte blue = byte.Parse(Context.Request.Query["blue"]);
+  //  byte green = byte.Parse(Context.Request.Query["green"]);
 }
 
 <h1>Create</h1>
@@ -18,49 +19,38 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="registrationNumber" class="control-label"></label>
-                <input asp-for="registrationNumber" class="form-control" required />
-                <span asp-validation-for="registrationNumber" class="text-danger"></span>
+                <label asp-for="RegistrationNumber" class="control-label"></label>
+                <input asp-for="RegistrationNumber" class="form-control" required />
+                <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
             </div>
         
             <div class="form-group">
-                <label asp-for="vehicleType" class="control-label"></label>
+                <label asp-for="VehicleType" class="control-label"></label>
                 <select class="form-select" name="type">
                 @foreach (var type in Html.GetEnumSelectList<VehicleType>())
                 {
                    <option value="@type.Value">@type.Text</option> 
                 }
                 </select>
-                <span asp-validation-for="vehicleType" class="text-danger"></span>
+                <span asp-validation-for="VehicleType" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="vehicleModel" class="control-label"></label>
-                <input asp-for="vehicleModel" class="form-control" required />
-                <span asp-validation-for="vehicleModel" class="text-danger"></span>
+                <label asp-for="VehicleModel" class="control-label"></label>
+                <input asp-for="VehicleModel" class="form-control" required />
+                <span asp-validation-for="VehicleModel" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="vehicleBrand" class="control-label" ></label>
-                <input asp-for="vehicleBrand" class="form-control" required />
-                <span asp-validation-for="vehicleBrand" class="text-danger"></span>
+                <label asp-for="VehicleBrand" class="control-label" ></label>
+                <input asp-for="VehicleBrand" class="form-control" required />
+                <span asp-validation-for="VehicleBrand" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="color" class="control-label" ></label>
-                <br/>
-                <label for="red">red</label>
-                <input type="range" min="0" max="255" value="@red" asp-for="color" id="red"/>
-                <label>@red</label>
-                <br/>
-                <label for="green">green</label>
-                <input type="range" min="0" max="255" value="@green" asp-for="color" id="green"/>
-                <label>@green</label>
-                <br/>
-                <label for="blue">blue</label>
-                <input type="range" min="0" max="255" value="@blue" asp-for="color" id="blue"/>
-                <label>@blue</label>
-                <span asp-validation-for="color" class="text-danger"></span>
+                <label asp-for="Color" class="control-label" ></label>
+                <input type="color" asp-for="Color" />
+                <span asp-validation-for="Color" class="text-danger"></span>
             </div>
 
             <div class="form-group">

@@ -13,28 +13,28 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.registrationNumber)
+                @Html.DisplayNameFor(model => model.RegistrationNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.arrivalTime)
+                @Html.DisplayNameFor(model => model.ArrivalTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.vehicleType)
+                @Html.DisplayNameFor(model => model.VehicleType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.vehicleModel)
+                @Html.DisplayNameFor(model => model.VehicleModel)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.vehicleBrand)
+                @Html.DisplayNameFor(model => model.VehicleBrand)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.departureTime)
+                @Html.DisplayNameFor(model => model.DepartureTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.color)
+                @Html.DisplayNameFor(model => model.Color)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.wheels)
+                @Html.DisplayNameFor(model => model.Wheels)
             </th>
             <th></th>
         </tr>
@@ -43,28 +43,28 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(model => item.registrationNumber)
+                @Html.DisplayFor(model => item.RegistrationNumber)
             </td>
             <td>
-                @Html.DisplayFor(model => item.arrivalTime)
+                @Html.DisplayFor(model => item.ArrivalTime)
             </td>
             <td>
-                @Html.DisplayFor(model => item.vehicleType)
+                @Html.DisplayFor(model => item.VehicleType)
             </td>
             <td>
-                @Html.DisplayFor(model => item.vehicleModel)
+                @Html.DisplayFor(model => item.VehicleModel)
             </td>
             <td>
-                @Html.DisplayFor(model => item.vehicleBrand)
+                @Html.DisplayFor(model => item.VehicleBrand)
             </td>
             <td>
-                @Html.DisplayFor(model => item.departureTime)
+                @Html.DisplayFor(model => item.DepartureTime)
             </td>
             <td>
-                @Html.DisplayFor(model => item.color)
+                @Html.DisplayFor(model => item.Color)
             </td>
             <td>
-                @Html.DisplayFor(model => item.wheels)
+                @Html.DisplayFor(model => item.Wheels)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

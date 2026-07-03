@@ -1,7 +1,9 @@
 
+using System.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Garage2._0.Models;
+using Garage2._0.Models.ViewModels;
 
 public class ParkedVehiclesController : Controller
 {
@@ -47,16 +49,27 @@ public class ParkedVehiclesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,vehicleType,vehicleModel,vehicleBrand,color,wheels")] ParkedVehicle parkedvehicle)
+    public async Task<IActionResult> Create(CreateParkedVehicleViewModel model)
     {
-        parkedvehicle.arrivalTime = DateTime.Now;
+        var 
+        _context.ParkedVehicle.ToList().Contains(vehicle => model.RegistrationNumber == vehicle.)
+        ParkedVehicle newParkedVehicle = new ParkedVehicle()
+        {
+            ArrivalTime = DateTime.Now,
+            RegistrationNumber = model.RegistrationNumber,
+            VehicleBrand = model.VehicleBrand,
+            VehicleModel = model.VehicleModel,
+            VehicleType = model.VehicleType,
+            Color = model.Color,
+            Wheels = model.wheels
+        };
         if (ModelState.IsValid)
         {
-            _context.Add(parkedvehicle);
+            _context.Add(newParkedVehicle);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(parkedvehicle);
+        return View(newParkedVehicle);
     }
 
     // GET: PARKEDVEHICLES/Edit/5
