@@ -47,18 +47,16 @@ Punkter från Issue 3-arbetet som behöver gruppbeslut innan de kan mergas eller
 
 ---
 
-## 4. Namngivning: `Color` vs `color` (PascalCase vs camelCase) 📛
+## 4. Namngivning: camelCase → PascalCase 📛
 
-**Nuläge:** Fredriks Create-vy använder `asp-for="Color"` (stort C). Min modell har `color` (litet c). Detta krockar.
+**Nuläge:** Min modell använder camelCase (`color`, `registrationNumber`) från scaffoldningen. C#-standard är PascalCase — Fredrik följde detta korrekt i Create.cshtml med `asp-for="Color"`. Min modell bör anpassas till standard.
 
-**Standard i C#:** Properties ska vara **PascalCase** (`Color`, `RegistrationNumber`, `VehicleType`).
-
-**Vår kod:** Har blandat — scaffoldningen genererade camelCase.
+**Konsekvens:** Byta HELA modellen till PascalCase påverkar alla vyer + controllern.
 
 **Att bestämma:**
-- Byta HELA modellen till PascalCase? (`registrationNumber` → `RegistrationNumber` osv.)
-- Detta påverkar ALLA vyer + controllern
-- Bör bli en egen refactor-issue med tydlig ägare
+- Byta till PascalCase på alla properties? (`registrationNumber` → `RegistrationNumber` osv.)
+- Bör bli en egen refactor-issue med tydlig ägare — inte ändras mitt i pågående feature-arbete
+- Vem tar ansvar för refactoren?
 
 ---
 
@@ -86,23 +84,31 @@ Punkter från Issue 3-arbetet som behöver gruppbeslut innan de kan mergas eller
 
 ---
 
-## 7. `.obsidian`-mapp i git 🗂️
+## 7. `.gitignore` städning 🗂️
 
-**Nuläge:** Jag har lagt `.obsidian/` i `.gitignore` (efter att ha råkat committa den).
+**Nuläge:** `.gitignore` saknar mönster för flera IDE:er och lokala filer teamet använder. Just nu trackas t.ex. `_1.db` och `.obsidian/` som inte borde ligga i git.
+
+**Förslag:**
+```
+# IDE / editor
+.idea/          # Fredrik — IntelliJ IDEA / Rider
+.vs/            # Visual Studio
+.vscode/        # VS Code
+.obsidian/      # Javier — projektnoter
+
+# Databas (lokal per utvecklare)
+*.db
+*.db-shm
+*.db-wal
+
+# OS
+.DS_Store       # macOS
+```
 
 **Att bestämma:**
-- OK för alla? Ingen använder Obsidian för att versionera projektnoter?
-
----
-
-## 8. `.db`-filer i git 💾
-
-**Nuläge:** `_1.db` har trackats. Jag föreslår `*.db` i `.gitignore` + `git rm --cached _1.db`.
-
-**Konsekvens:** Alla får tom DB efter pull → kör `dotnet ef database update` + `test-vehicles.sql` (eller framtida seeder från punkt 1).
-
-**Att bestämma:**
-- OK att jag genomför detta?
+- Vem använder vilken IDE? (Fråga runt bordet)
+- OK att jag genomför uppdateringen?
+- Efter merge: `git rm --cached _1.db .idea/ .vscode/ .obsidian/` för att sluta tracka det som redan finns i git
 
 ---
 
@@ -116,5 +122,4 @@ Punkter från Issue 3-arbetet som behöver gruppbeslut innan de kan mergas eller
 | 4. PascalCase-refactor | Alla | Ny issue, tilldelas |
 | 5. Enum svenska namn | Alla | Javier (i Issue 3-PR) |
 | 6. Skydda arrivalTime | Fredrik + George | Respektive issue |
-| 7. `.obsidian` ignoreras | Alla | Javier |
-| 8. `.db` ignoreras | Alla | Javier |
+| 7. `.gitignore` städning | Alla | Javier |
