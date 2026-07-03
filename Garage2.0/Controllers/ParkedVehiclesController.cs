@@ -51,8 +51,7 @@ public class ParkedVehiclesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateParkedVehicleViewModel model)
     {
-        var 
-        _context.ParkedVehicle.ToList().Contains(vehicle => model.RegistrationNumber == vehicle.)
+
         ParkedVehicle newParkedVehicle = new ParkedVehicle()
         {
             ArrivalTime = DateTime.Now,
@@ -70,6 +69,17 @@ public class ParkedVehiclesController : Controller
             return RedirectToAction(nameof(Index));
         }
         return View(newParkedVehicle);
+    }
+    
+    [AcceptVerbs("GET", "POST")]
+    public async Task<IActionResult> VerifyRegistrationNumber(string registationNumber)
+    {
+        IEnumerable<ParkedVehicle> list = await _context.ParkedVehicle.ToListAsync();
+        if (list.Any(v => v.RegistrationNumber == registationNumber))
+        {
+            return Json($"Email {registationNumber} is already in use.");
+        }
+        return Json(true);
     }
 
     // GET: PARKEDVEHICLES/Edit/5
