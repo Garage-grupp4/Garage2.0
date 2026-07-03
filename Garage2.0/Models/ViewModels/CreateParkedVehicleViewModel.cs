@@ -7,7 +7,6 @@ namespace Garage2._0.Models.ViewModels;
 public class CreateParkedVehicleViewModel
 {
     [Display(Name = "Registration Number")]
-    [Remote(action: "VerifyRegistrationNumber",controller: "ParkedVehicles")]
     public required string RegistrationNumber { get; set; }
 
     [Display(Name = "Type")]

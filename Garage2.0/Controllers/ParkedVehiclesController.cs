@@ -61,7 +61,15 @@ public class ParkedVehiclesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateParkedVehicleViewModel model)
     {
-
+        // Validate if unique number or return model error
+        if (!await IsRegistrationNumberUnique(model.RegistrationNumber))
+        {
+            ModelState.AddModelError(nameof(model.RegistrationNumber),
+                $"Registration number {model.RegistrationNumber} is already in use.");
+            return View(model);
+        }
+        
+        // Generate newVehicle
         ParkedVehicle newParkedVehicle = new ParkedVehicle()
         {
             ArrivalTime = DateTime.Now,
@@ -72,6 +80,8 @@ public class ParkedVehiclesController : Controller
             Color = model.Color,
             Wheels = model.wheels
         };
+        
+        // Send to Database
         if (ModelState.IsValid)
         {
             _context.Add(newParkedVehicle);
@@ -79,6 +89,12 @@ public class ParkedVehiclesController : Controller
             return RedirectToAction(nameof(Index));
         }
         return View();
+    }
+    
+    private async Task<bool> IsRegistrationNumberUnique(string registrationNumber)
+    {
+        return !await _context.ParkedVehicle
+            .AnyAsync(v => v.RegistrationNumber == registrationNumber);
     }
     
     [AcceptVerbs("GET", "POST")]
