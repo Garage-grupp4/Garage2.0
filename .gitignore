@@ -364,4 +364,5 @@ FodyWeavers.xsd
 
 # Javier
 ## Obsidian
-.Obsidian/
+.obsidian/
+**/.obsidian/
