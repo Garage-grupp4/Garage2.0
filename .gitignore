@@ -366,3 +366,8 @@ FodyWeavers.xsd
 ## Obsidian
 .obsidian/
 **/.obsidian/
+
+## database
+*.db
+*.db-shm
+*.db-wal
