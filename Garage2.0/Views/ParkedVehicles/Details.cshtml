@@ -1,13 +1,13 @@
 @model Garage2._0.Models.ParkedVehicle
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Fordonsdetaljer";
 }
 
-<h1>Details</h1>
+<h1>Fordonsdetaljer</h1>
 
 <div>
-    <h4>ParkedVehicle</h4>
+    <h4>Parkerat fordon</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -25,7 +25,15 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.arrivalTime)
         </dd>
-    </dl>
+        </dl>
+     <dl class="row">
+        <dt class = "col-sm-2">
+Parkerad tid
+        </dt>
+        <dd class = "col-sm-10">
+@((DateTime.Now - Model.arrivalTime.Value).ToString(@"d\d\ hh\:mm"))
+        </dd>
+       </dl>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.vehicleType)
@@ -52,14 +60,6 @@
     </dl>
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.departureTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.departureTime)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.color)
         </dt>
         <dd class = "col-sm-10">
@@ -76,6 +76,7 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Redigera</a> |
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Hämta ut</a> |
+    <a asp-action="Index">Tillbaka till översikt</a>
 </div>
