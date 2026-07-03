@@ -35,15 +35,15 @@ En enda modell: `ParkedVehicle` med följande properties:
 | – | Gemensam singelmodell | Alla | Ej startad |
 | – | Migrationer & lokal databas | Alla | Ej startad |
 | – | Scaffoldad controller & vyer | Alla | Ej startad |
-| 1 | Anpassa parkera/checka in-vyn | – | Ej startad |
-| 2 | Anpassa översiktsvyn | – | Ej startad |
-| 3 | Anpassa detaljvyn | **Javier** | Ej startad |
-| 4 | Anpassa edit-vyn | – | Ej startad |
-| 5 | Hämta ut / checka ut | – | Ej startad |
-| 6 | Kvitto | – | Ej startad |
-| 7 | Sökning | – | Ej startad |
-| 8 | Feedback & användarvänlighet | – | Ej startad |
-| 9 | Bonus: utökad sökning & sortering | – | Ej startad |
+| 1 | [Anpassa parkera/checka in-vyn](issues/issue-01-parkera.md) | – | Ej startad |
+| 2 | [Anpassa översiktsvyn](issues/issue-02-oversikt.md) | – | Ej startad |
+| 3 | [Anpassa detaljvyn](issues/issue-03-detaljvyn.md) | **Javier** | Ej startad |
+| 4 | [Anpassa edit-vyn](issues/issue-04-edit.md) | – | Ej startad |
+| 5 | [Hämta ut / checka ut](issues/issue-05-checkout.md) | – | Ej startad |
+| 6 | [Kvitto](issues/issue-06-kvitto.md) | – | Ej startad |
+| 7 | [Sökning](issues/issue-07-sokning.md) | – | Ej startad |
+| 8 | [Feedback & användarvänlighet](issues/issue-08-feedback.md) | – | Ej startad |
+| 9 | [Bonus: utökad sökning & sortering](issues/issue-09-bonus.md) | – | Ej startad |
 
 **Statusvärden:** Ej startad · Pågår · Behöver hjälp · För Review · Klar
 
