@@ -22,9 +22,9 @@ public class ParkedVehiclesController : Controller
         var viewModel = vehicles.Select(v => new VehicleOverViewModel
         {
             Id = v.Id,
-            RegistrationNumber = v.registrationNumber,
-            VehicleType = v.vehicleType,
-            ArrivalTime = v.arrivalTime ?? DateTime.Now
+            RegistrationNumber = v.RegistrationNumber,
+            VehicleType = v.VehicleType,
+            ArrivalTime = v.ArrivalTime ?? DateTime.Now
         }).ToList();
 
         return View(viewModel);
