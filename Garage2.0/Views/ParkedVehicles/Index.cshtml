@@ -18,6 +18,23 @@
                 <input type="text" name="license" class="form-control" value="@ViewData["license"]" />
             </div>
             <div class="col form-group">
+                <label class="control-label">Vehicle Type</label>
+                <select class="form-select" name="type">
+                    <option value=""></option>
+                    @foreach (var type in Html.GetEnumSelectList<VehicleType>())
+                    {
+                        if (ViewData["type"]?.ToString() == type.Text)
+                        {
+                            <option value="@type.Value" selected>@type.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@type.Value">@type.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col form-group">
                 <input type="submit" value="Search" class="btn btn-primary" />
             </div>
         </form>
@@ -26,7 +43,7 @@
 
 @if (Model.Count() == 0)
 {
-    <span>No parked vehicles</span>
+    <span>No parked vehicles found</span>
 }
 else
 {
@@ -43,17 +60,17 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>@item.VehicleType</td>
-                <td>@item.RegistrationNumber</td>
-                <td>@item.ArrivalTime</td>
-                <td>@item.ParkedDuration</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Leave Parking</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>@item.VehicleType</td>
+                    <td>@item.RegistrationNumber</td>
+                    <td>@item.ArrivalTime</td>
+                    <td>@item.ParkedDuration</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Leave Parking</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

@@ -16,14 +16,19 @@ public class ParkedVehiclesController : Controller
     }
 
     // GET: PARKEDVEHICLES
-    public async Task<IActionResult> Index(string license)    
+    public async Task<IActionResult> Index(string license, VehicleType? type)    
     {
         var vehicles = _context.ParkedVehicle.Select(v => v);
 
-        if (!string.IsNullOrEmpty(license)) {
+        // Save search terms to populate html page
+        ViewData["license"] = license; 
+        ViewData["type"] = type; 
+
+        // Filter with search terms
+        if (!string.IsNullOrEmpty(license))
             vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().Contains(license.ToUpper()));
-            ViewData["license"] = license; // save license to populate html page
-        }
+        if (type != null)
+            vehicles = vehicles.Where(v => v.VehicleType == type);
 
         var viewModel = (await vehicles.ToListAsync()).Select(v => new VehicleOverViewModel
         {
