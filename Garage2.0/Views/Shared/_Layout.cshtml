@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Garage2._0</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Garage2._0.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/Garage2._0.styles.css" asp-append-version="true"/>
 </head>
 <body>
     <header>
@@ -29,6 +29,24 @@
         </nav>
     </header>
     <div class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div id="success" class="alert alert-success" role="alert">
+                @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Warning"] != null)
+        {
+            <div id="warning" class="alert alert-warning" role="alert">
+                @TempData["Warning"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div id="danger" class="alert alert-danger" role="alert">
+                @TempData["Error"]
+            </div>
+        }
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

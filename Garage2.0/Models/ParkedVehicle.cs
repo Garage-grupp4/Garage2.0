@@ -24,11 +24,15 @@ public class ParkedVehicle
     [Display(Name = "Brand")]
     public required string VehicleBrand { get; set; }
 
-        public DateTime? DepartureTime { get; set; }
+    public DateTime? DepartureTime { get; set; }
 
-        public string? Color { get; set; }
+    public string? Color { get; set; }
 
-        [Range(0, 64)]
-        public required int Wheels { get; set; }
+    [Range(0, 64)] 
+    public required int Wheels { get; set; }
+
+    public override string ToString()
+    {
+        return $"{VehicleType} {RegistrationNumber}";
     }
-
+}

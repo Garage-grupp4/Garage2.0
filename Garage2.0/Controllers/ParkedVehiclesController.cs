@@ -64,8 +64,9 @@ public class ParkedVehiclesController : Controller
         // Validate if unique number or return model error
         if (!await IsRegistrationNumberUnique(model.RegistrationNumber))
         {
-            ModelState.AddModelError(nameof(model.RegistrationNumber),
-                $"Registration number {model.RegistrationNumber} is already in use.");
+            string warning = $"Registration number {model.RegistrationNumber} is already in use.";
+            ModelState.AddModelError(nameof(model.RegistrationNumber), warning);
+            TempData["Warning"] = warning;
             return View(model);
         }
         
@@ -86,8 +87,10 @@ public class ParkedVehiclesController : Controller
         {
             _context.Add(newParkedVehicle);
             await _context.SaveChangesAsync();
+            TempData["Success"] = $"Successfully Parked {newParkedVehicle} at {newParkedVehicle.ArrivalTime}";
             return RedirectToAction(nameof(Index));
         }
+        ViewData["Error"] = "Error message text."; 
         return View();
     }
     
@@ -148,8 +151,9 @@ public class ParkedVehiclesController : Controller
         // Validate if unique number or return model error
         if (model.OriginalRegistrationNumber != model.RegistrationNumber && !await IsRegistrationNumberUnique(model.RegistrationNumber))
         {
-            ModelState.AddModelError(nameof(model.RegistrationNumber),
-                $"Registration number {model.RegistrationNumber} is already in use.");
+            string warning = $"Registration number {model.RegistrationNumber} is already in use.";
+            ModelState.AddModelError(nameof(model.RegistrationNumber), warning);
+            TempData["Warning"] = warning;
             return View(model);
         }
         
@@ -166,7 +170,6 @@ public class ParkedVehiclesController : Controller
             Id = model.Id,
         };
         
-        
         if (ModelState.IsValid)
         {
             try
@@ -178,15 +181,19 @@ public class ParkedVehiclesController : Controller
             {
                 if (!ParkedVehicleExists(newParkedVehicle.Id))
                 {
+                    TempData["Error"] = "Vehicle not found";
                     return NotFound();
                 }
                 else
                 {
+                    TempData["Error"] = "DbUpdateConcurrencyException";
                     throw;
                 }
             }
+            TempData["Success"] = $"Successfully edited Vehicle {newParkedVehicle}";
             return RedirectToAction(nameof(Index));
         }
+        
         return View(newParkedVehicle);
     }
 
