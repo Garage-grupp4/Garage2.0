@@ -167,14 +167,15 @@ public class ParkedVehiclesController : Controller
             return NotFound();
         }
 
-        var parkedvehicle = await _context.ParkedVehicle
+        var vehicle = await _context.ParkedVehicle
             .FirstOrDefaultAsync(m => m.Id == id);
-        if (parkedvehicle == null)
+        
+        if (vehicle == null)
         {
             return NotFound();
         }
 
-        return View(parkedvehicle);
+        return View(vehicle);
     }
 
     // POST: PARKEDVEHICLES/Delete/5
@@ -182,14 +183,30 @@ public class ParkedVehiclesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
-        var parkedvehicle = await _context.ParkedVehicle.FindAsync(id);
-        if (parkedvehicle != null)
+        var vehicle = await _context.ParkedVehicle.FindAsync(id);
+        
+        if (vehicle == null)
         {
-            _context.ParkedVehicle.Remove(parkedvehicle);
+            return NotFound();
         }
 
+        var receipt = new ReceiptViewModel
+        {
+            Id = vehicle.Id,
+            RegistrationNumber = vehicle.RegistrationNumber,
+            VehicleType = vehicle.VehicleType,
+            VehicleBrand = vehicle.VehicleBrand,
+            VehicleModel = vehicle.VehicleModel,
+            Color = vehicle.Color,
+            Wheels = vehicle.Wheels,
+            ArrivalTime = vehicle.ArrivalTime ?? DateTime.Now,
+            DepartureTime = DateTime.Now
+        };
+
+        _context.ParkedVehicle.Remove(vehicle);
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+
+        return View("Receipt", receipt);
     }
 
     private bool ParkedVehicleExists(int? id)
