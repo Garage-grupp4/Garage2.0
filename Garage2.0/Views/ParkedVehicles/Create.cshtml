@@ -1,12 +1,11 @@
-@model Garage2._0.Models.ParkedVehicle
+@model Garage2._0.Models.ViewModels.CreateParkedVehicleViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Park New Vehicle</h1>
 
-<h4>ParkedVehicle</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,51 +13,45 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="registrationNumber" class="control-label"></label>
-                <input asp-for="registrationNumber" class="form-control" />
-                <span asp-validation-for="registrationNumber" class="text-danger"></span>
+                <label asp-for="RegistrationNumber" class="control-label"></label>
+                <input asp-for="RegistrationNumber" class="form-control" required />
+                <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+            </div>
+        
+            <div class="form-group">
+                <label asp-for="VehicleType" class="control-label"></label>
+                <select class="form-select" name="type">
+                @foreach (var type in Html.GetEnumSelectList<VehicleType>())
+                {
+                   <option value="@type.Value">@type.Text</option> 
+                }
+                </select>
+                <span asp-validation-for="VehicleType" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="arrivalTime" class="control-label"></label>
-                <input asp-for="arrivalTime" class="form-control" />
-                <span asp-validation-for="arrivalTime" class="text-danger"></span>
+                <label asp-for="VehicleModel" class="control-label"></label>
+                <input asp-for="VehicleModel" class="form-control" required />
+                <span asp-validation-for="VehicleModel" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="vehicleType" class="control-label"></label>
-                <input asp-for="vehicleType" class="form-control" />
-                <span asp-validation-for="vehicleType" class="text-danger"></span>
+                <label asp-for="VehicleBrand" class="control-label" ></label>
+                <input asp-for="VehicleBrand" class="form-control" required />
+                <span asp-validation-for="VehicleBrand" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="vehicleModel" class="control-label"></label>
-                <input asp-for="vehicleModel" class="form-control" />
-                <span asp-validation-for="vehicleModel" class="text-danger"></span>
+                <label asp-for="Color" class="control-label" ></label>
+                <br/>
+                <input type="color" asp-for="Color" />
+                <span asp-validation-for="Color" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="vehicleBrand" class="control-label"></label>
-                <input asp-for="vehicleBrand" class="form-control" />
-                <span asp-validation-for="vehicleBrand" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="departureTime" class="control-label"></label>
-                <input asp-for="departureTime" class="form-control" />
-                <span asp-validation-for="departureTime" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="color" class="control-label"></label>
-                <input asp-for="color" class="form-control" />
-                <span asp-validation-for="color" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="wheels" class="control-label"></label>
-                <input asp-for="wheels" class="form-control" />
-                <span asp-validation-for="wheels" class="text-danger"></span>
+                <label asp-for="Wheels" class="control-label" ></label>
+                <input asp-for="Wheels" class="form-control" value="4" min="0" max="64" required />
+                <span asp-validation-for="Wheels" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

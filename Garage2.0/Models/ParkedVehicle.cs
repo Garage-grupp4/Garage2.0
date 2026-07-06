@@ -1,34 +1,27 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
-namespace Garage2._0.Models;
-
-public class ParkedVehicle
+namespace Garage2._0.Models
 {
-    public int Id { get; set; }
+    public class ParkedVehicle
+    {
+        public int Id { get; set; }
 
-    [Display(Name = "Registration Number")]
-    public required string registrationNumber { get; set; }
+        public required string registrationNumber { get; set; }
 
-    [Display(Name = "Arrival Time")]
-    [DisplayFormat(DataFormatString = "{0:yy-MM-dd HH:mm}")]
-    public required DateTime? arrivalTime { get; set; }
+        public required DateTime? arrivalTime { get; set; }
 
-    [Display(Name = "Vehicle Type")]
-    public required VehicleType vehicleType { get; set; }
+        public required VehicleType vehicleType { get; set; }
 
-    [Display(Name = "Model")]
-    public required string vehicleModel { get; set; }
+        public required string vehicleModel { get; set; }
 
-    [Display(Name = "Brand")]
-    public required string vehicleBrand { get; set; }
+        public required string vehicleBrand { get; set; }
 
-    [Display(Name = "Departure Time")]
-    public DateTime? departureTime { get; set; }
+        public DateTime? departureTime { get; set; }
 
-    [Display(Name = "Color")]
-    public string color { get; set; } = "";
+        public short color { get; set; }
 
-    [Display(Name = "Wheels")]
-    [Range(0, 64)]
-    public required int wheels { get; set; }
+        [Range(0, 64)]
+        public required int wheels { get; set; }
+    }
 }
