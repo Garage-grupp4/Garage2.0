@@ -4,12 +4,12 @@ ASP.NET Core MVC-baserad garageapplikation. Första MVC-versionen av garaget —
 
 ## Gruppmedlemmar
 
-| Namn | Ansvarsområde |
-|------|---------------|
-| Peter Laan | Issue 2: Översiktsvyn |
-| Fredrik Selander | Issue 1: Parkera/checka in-vyn |
-| George Cristian Ciolponea | Issue 4: Edit-vyn |
-| Javier Diaz Urbano | Issue 3: Detaljvyn |
+| Namn                      | Ansvarsområde |
+| ------------------------- | ------------- |
+| Peter Laan                | Issue 7       |
+| Fredrik Selander          | Issue 1,4,8   |
+| George Cristian Ciolponea | Issue 2,5     |
+| Javier Diaz Urbano        | Issue 3       |
 
 ## Grundflöde
 
