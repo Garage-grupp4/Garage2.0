@@ -1,13 +1,13 @@
 @model Garage2._0.Models.ParkedVehicle
 
 @{
-    ViewData["Title"] = "Fordonsdetaljer";
+    ViewData["Title"] = "Vehicle Details";
 }
 
-<h1>Fordonsdetaljer</h1>
+<h1>Vehicle Details</h1>
 
 <div>
-    <h4>Parkerat fordon</h4>
+    <h4>Parked Vehicle</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -28,7 +28,7 @@
         </dl>
      <dl class="row">
         <dt class = "col-sm-2">
-Parkerad tid
+Parked Time
         </dt>
         <dd class = "col-sm-10">
 @((DateTime.Now - Model.arrivalTime.Value).ToString(@"d\d\ hh\:mm"))
@@ -79,7 +79,7 @@ Parkerad tid
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Redigera</a> |
-    <a asp-action="Delete" asp-route-id="@Model?.Id">Hämta ut</a> |
-    <a asp-action="Index">Tillbaka till översikt</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Check Out</a> |
+    <a asp-action="Index">Back to List</a>
 </div>

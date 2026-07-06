@@ -4,16 +4,16 @@ namespace Garage2._0.Models
 {
     public enum VehicleType
     {
-        [Display(Name = "Bil")]
+        [Display(Name = "Car")]
         Car,
 
-        [Display(Name = "Buss")]
+        [Display(Name = "Bus")]
         Bus,
 
-        [Display(Name = "Lastbil")]
+        [Display(Name = "Truck")]
         Truck,
 
-        [Display(Name = "Motorcykel")]
+        [Display(Name = "Motorcycle")]
         Motorcycle,
     }
 }
