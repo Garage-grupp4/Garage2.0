@@ -1,9 +1,10 @@
 
-using System.Drawing;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Garage2._0.Models;
 using Garage2._0.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
+using System.Drawing;
 
 public class ParkedVehiclesController : Controller
 {
@@ -15,11 +16,14 @@ public class ParkedVehiclesController : Controller
     }
 
     // GET: PARKEDVEHICLES
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index(string license)    
     {
-        var vehicles = await _context.ParkedVehicle.ToListAsync();
+        var vehicles = _context.ParkedVehicle.Select(v => v);
 
-        var viewModel = vehicles.Select(v => new VehicleOverViewModel
+        if (!string.IsNullOrEmpty(license))
+            vehicles = vehicles.Where(v => v.RegistrationNumber == license);
+
+        var viewModel = (await vehicles.ToListAsync()).Select(v => new VehicleOverViewModel
         {
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,

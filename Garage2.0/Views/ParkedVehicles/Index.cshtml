@@ -4,11 +4,25 @@
     ViewData["Title"] = "Garage Overview";
 }
 
-<h1>Parked Vehicle</h1>
+<h1>Parked Vehicles</h1>
 
 <p>
     <a asp-action="Create">Park Vehicle</a>
 </p>
+
+<div class="container">
+    <div class="row">
+        <form asp-action="Index">
+            <div class="col form-group">
+                <label class="control-label">License</label>
+                <input type="text" name="license" class="form-control" />
+            </div>
+            <div class="col form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
 
 <table class="table">
     <thead>
@@ -21,19 +35,19 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
-         <tr>
-             <td>@item.VehicleType</td>
-             <td>@item.RegistrationNumber</td>
-             <td>@item.ArrivalTime</td>
-             <td>@item.ParkedDuration</td>
-             <td>
+            <tr>
+                <td>@item.VehicleType</td>
+                <td>@item.RegistrationNumber</td>
+                <td>@item.ArrivalTime</td>
+                <td>@item.ParkedDuration</td>
+                <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     <a asp-action="Delete" asp-route-id="@item.Id">Leave Parking</a>
-             </td>
-         </tr>   
+                </td>
+            </tr>
         }
     </tbody>
 </table>
