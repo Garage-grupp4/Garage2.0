@@ -78,7 +78,7 @@ public class ParkedVehiclesController : Controller
             VehicleModel = model.VehicleModel,
             VehicleType = model.VehicleType,
             Color = model.Color,
-            Wheels = model.wheels
+            Wheels = model.Wheels
         };
         
         // Send to Database
@@ -121,7 +121,20 @@ public class ParkedVehiclesController : Controller
         {
             return NotFound();
         }
-        return View(parkedvehicle);
+
+        var parkedvehicleModel = new EditParkedVehicleViewModel()
+        {
+            Id = parkedvehicle.Id,
+            RegistrationNumber = parkedvehicle.RegistrationNumber,
+            OriginalRegistrationNumber = parkedvehicle.RegistrationNumber,
+            Color = parkedvehicle.Color ?? "#ffffff",
+            VehicleBrand = parkedvehicle.VehicleBrand,
+            ArrivalTime = parkedvehicle.ArrivalTime ?? DateTime.MinValue,
+            VehicleModel = parkedvehicle.VehicleModel,
+            VehicleType = parkedvehicle.VehicleType,
+            Wheels = parkedvehicle.Wheels,
+        };
+        return View(parkedvehicleModel);
     }
 
     // POST: PARKEDVEHICLES/Edit/5
@@ -129,23 +142,41 @@ public class ParkedVehiclesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,registrationNumber,arrivalTime,vehicleType,vehicleModel,vehicleBrand,departureTime,color,wheels")] ParkedVehicle parkedvehicle)
+    public async Task<IActionResult> Edit(EditParkedVehicleViewModel model)
     {
-        if (id != parkedvehicle.Id)
-        {
-            return NotFound();
-        }
 
+        // Validate if unique number or return model error
+        if (model.OriginalRegistrationNumber != model.RegistrationNumber && !await IsRegistrationNumberUnique(model.RegistrationNumber))
+        {
+            ModelState.AddModelError(nameof(model.RegistrationNumber),
+                $"Registration number {model.RegistrationNumber} is already in use.");
+            return View(model);
+        }
+        
+        // Generate newVehicle
+        ParkedVehicle newParkedVehicle = new ParkedVehicle()
+        {
+            ArrivalTime = model.ArrivalTime,
+            RegistrationNumber = model.RegistrationNumber,
+            VehicleBrand = model.VehicleBrand,
+            VehicleModel = model.VehicleModel,
+            VehicleType = model.VehicleType,
+            Color = model.Color,
+            Wheels = model.Wheels,
+            Id = model.Id,
+        };
+        
+        
         if (ModelState.IsValid)
         {
             try
             {
-                _context.Update(parkedvehicle);
+                _context.Update(newParkedVehicle);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ParkedVehicleExists(parkedvehicle.Id))
+                if (!ParkedVehicleExists(newParkedVehicle.Id))
                 {
                     return NotFound();
                 }
@@ -156,7 +187,7 @@ public class ParkedVehiclesController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        return View(parkedvehicle);
+        return View(newParkedVehicle);
     }
 
     // GET: PARKEDVEHICLES/Delete/5

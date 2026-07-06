@@ -1,60 +1,67 @@
-@model Garage2._0.Models.ParkedVehicle
+@model Garage2._0.Models.ViewModels.EditParkedVehicleViewModel
 
 @{
     ViewData["Title"] = "Edit";
+    
 }
 
 <h1>Edit</h1>
 
-<h4>ParkedVehicle</h4>
+<h4>Vehicle @Html.DisplayFor(model => model.OriginalRegistrationNumber)</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
+            
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ArrivalTime" />
+            <input type="hidden" asp-for="OriginalRegistrationNumber" />
+                    
+            <div class="form-group">
+                <label asp-for="ArrivalTime" class="control-label"></label>
+                <p>
+                    @Html.DisplayFor(model => model.ArrivalTime)
+                </p>
+            </div>
             <div class="form-group">
                 <label asp-for="RegistrationNumber" class="control-label"></label>
-                <input asp-for="RegistrationNumber" class="form-control" />
+                <input asp-for="RegistrationNumber" class="form-control" required/>
                 <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ArrivalTime" class="control-label"></label>
-                <input asp-for="ArrivalTime" class="form-control" />
-                <span asp-validation-for="ArrivalTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="VehicleType" class="control-label"></label>
-                <input asp-for="VehicleType" class="form-control" />
+                <select class="form-select" name="type">
+                    @foreach (var type in Html.GetEnumSelectList<VehicleType>())
+                    {
+                        <option value="@type.Value">@type.Text</option>
+                    }
+                </select>
                 <span asp-validation-for="VehicleType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="VehicleModel" class="control-label"></label>
-                <input asp-for="VehicleModel" class="form-control" />
+                <input asp-for="VehicleModel" class="form-control"/>
                 <span asp-validation-for="VehicleModel" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="VehicleBrand" class="control-label"></label>
-                <input asp-for="VehicleBrand" class="form-control" />
+                <input asp-for="VehicleBrand" class="form-control"/>
                 <span asp-validation-for="VehicleBrand" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DepartureTime" class="control-label"></label>
-                <input asp-for="DepartureTime" class="form-control" />
-                <span asp-validation-for="DepartureTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Color" class="control-label"></label>
-                <input asp-for="Color" class="form-control" />
+                <br/>
+                <input type="color" asp-for="Color"/>
                 <span asp-validation-for="Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Wheels" class="control-label"></label>
-                <input asp-for="Wheels" class="form-control" />
+                <input asp-for="Wheels" class="form-control"/>
                 <span asp-validation-for="Wheels" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary"/>
             </div>
         </form>
     </div>

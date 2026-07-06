@@ -1,14 +1,19 @@
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Garage2._0.Models.ViewModels;
 
-public class CreateParkedVehicleViewModel
+public class EditParkedVehicleViewModel
 {
+    public required int Id { get; init; }
+    
     [Display(Name = "Registration Number")]
     public required string RegistrationNumber { get; set; }
 
+    public required string OriginalRegistrationNumber { get; init; }
+    
+    [Display(Name = "Arrival Time")] 
+    public DateTime ArrivalTime { get; init; }
+    
     [Display(Name = "Type")]
     public required VehicleType VehicleType { get; set; }
 
@@ -25,5 +30,6 @@ public class CreateParkedVehicleViewModel
 
     [Display(Name = "Number Of Wheels")]
     [Range(0, 64, ErrorMessage = "Can't have that amount of wheels")]
-    public required int Wheels { get; set; }
+    public required int Wheels { get; set; } 
+    
 }
