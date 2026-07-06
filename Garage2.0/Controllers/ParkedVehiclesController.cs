@@ -20,8 +20,10 @@ public class ParkedVehiclesController : Controller
     {
         var vehicles = _context.ParkedVehicle.Select(v => v);
 
-        if (!string.IsNullOrEmpty(license))
-            vehicles = vehicles.Where(v => v.RegistrationNumber == license);
+        if (!string.IsNullOrEmpty(license)) {
+            vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().Contains(license.ToUpper()));
+            ViewData["license"] = license; // save license to populate html page
+        }
 
         var viewModel = (await vehicles.ToListAsync()).Select(v => new VehicleOverViewModel
         {
