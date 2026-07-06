@@ -64,24 +64,75 @@ Varje person svarar på:
 ## Kom igång lokalt
 
 ```bash
+# 1. Klona repot
 git clone git@github.com:GeorgeCristian110/Garage2.0.git
 cd Garage2.0
+
+# 2. (Valfritt) Byt till en specifik branch — annars körs master
+git switch issue3-Details-javier   # exempel
+
+# 3. Gå in i projektmappen och installera paket
+cd Garage2.0
 dotnet restore
+
+# 4. Skapa/uppdatera databasen
 dotnet ef database update
+
+# 5. (Valfritt) Ladda testdata — 5 fordon med olika färger
+sqlite3 _1.db < SeedData/test-vehicles.sql
+
+# 6. Kör appen
 dotnet run
+# eller med auto-reload:
+dotnet watch
 ```
+
+Appen körs på `http://localhost:5213` (portnumret kan variera — se terminalen).
+
+**Notera:** Projektet ligger i undermappen `Garage2.0/Garage2.0/` — steg 3–6 körs därifrån.
 
 ## Test-data
 
 Den lokala databasen (`_1.db`) är **inte** versionshanterad — varje utvecklare har sin egen.
 
-För att fylla en tom databas med test-fordon (5 st med olika färger, typer och ankomsttider):
+För att fylla en tom databas med 5 test-fordon (olika färger, typer och ankomsttider):
 
 ```bash
-sqlite3 Garage2.0/_1.db < Garage2.0/SeedData/test-vehicles.sql
+sqlite3 _1.db < SeedData/test-vehicles.sql
 ```
 
 Testdatan är bra för att verifiera detaljvyn (färgruta, parkerad tid) och översiktsvyn utan att behöva parkera fordon manuellt via UI.
+
+## Felsökning
+
+### `PendingModelChangesWarning` vid `dotnet ef database update`
+
+Betyder att någon har ändrat `ParkedVehicle.cs` utan att skapa en migration. Skapa den lokalt:
+
+```bash
+dotnet ef migrations add BeskrivningAvÄndring
+dotnet ef database update
+```
+
+**Committa alltid migrationsfilen** i samma PR som modellen ändras. Annars kraschar teamet vid nästa pull.
+
+### `no such table: ParkedVehicle` vid appstart
+
+Databasen är inte skapad än. Kör:
+
+```bash
+dotnet ef database update
+```
+
+### Databas ur synk efter branch-byte
+
+Enklaste vägen — släng och börja om:
+
+```bash
+rm _1.db
+dotnet ef database update
+sqlite3 _1.db < SeedData/test-vehicles.sql
+```
 
 ## Tech stack
 
