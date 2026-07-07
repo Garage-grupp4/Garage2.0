@@ -36,5 +36,16 @@
 
     <div class="mt-4">
         <a asp-action="Index" class="btn btn-secondary">←Back to List</a>
+        <button onclick="window.print()" class="btn btn-secondary">Print Receipt</button>
     </div>
 </div>
+
+@section Scripts {
+    <style>
+        @@media print {
+            nav, header, footer, .btn {
+                display: none !important;
+            }
+        }
+    </style>
+}
