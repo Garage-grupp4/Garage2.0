@@ -29,6 +29,7 @@
         </nav>
     </header>
     <div class="container">
+        <div class="d-print-none">
         @if (TempData["Success"] != null)
         {
             <div id="success" class="alert alert-success" role="alert">
@@ -47,6 +48,7 @@
                 @TempData["Error"]
             </div>
         }
+        </div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
