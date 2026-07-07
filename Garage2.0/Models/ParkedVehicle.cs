@@ -7,7 +7,8 @@ public class ParkedVehicle
 {
         
     public int Id { get; set; }
-        
+
+    [StringLength(10, MinimumLength = 1, ErrorMessage = "Registration number of invalid size")]
     [Display(Name = "Registration Number")]
     public required string RegistrationNumber { get; set; }
         

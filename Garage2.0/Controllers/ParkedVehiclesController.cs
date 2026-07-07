@@ -16,13 +16,13 @@ public class ParkedVehiclesController : Controller
     }
 
     // GET: PARKEDVEHICLES
-    public async Task<IActionResult> Index(string license, VehicleType? type)    
+    public async Task<IActionResult> Index(string license, VehicleType? type)
     {
         var vehicles = _context.ParkedVehicle.Select(v => v);
 
         // Save search terms to populate html page
-        ViewData["license"] = license; 
-        ViewData["type"] = type; 
+        ViewData["license"] = license;
+        ViewData["type"] = type;
 
         // Filter with search terms
         if (!string.IsNullOrEmpty(license))
@@ -36,12 +36,13 @@ public class ParkedVehiclesController : Controller
             RegistrationNumber = v.RegistrationNumber,
             VehicleType = v.VehicleType,
             ArrivalTime = v.ArrivalTime ?? DateTime.Now
+        
         }).ToList();
 
         return View(viewModel);
     }
 
-    // GET: PARKEDVEHICLES/Details/5
+    //GET: PARKEDVEHICLES/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
