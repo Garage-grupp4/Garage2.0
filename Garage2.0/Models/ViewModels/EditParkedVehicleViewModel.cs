@@ -5,7 +5,9 @@ namespace Garage2._0.Models.ViewModels;
 public class EditParkedVehicleViewModel
 {
     public required int Id { get; init; }
-    
+
+
+    [StringLength(10, MinimumLength = 1, ErrorMessage = "Registration number of invalid size")]
     [Display(Name = "Registration Number")]
     public required string RegistrationNumber { get; set; }
 
