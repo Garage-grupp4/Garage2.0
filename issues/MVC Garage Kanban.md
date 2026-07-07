@@ -14,7 +14,6 @@ kanban-plugin: board
 - [ ] Olika stora fordon
 - [ ] (Storlek)Effektiva motorcyklar
 - [ ] (Storlek)Giltiga fordonstyper
-- [ ] Kvitto print
 
 
 ## WIP
@@ -23,16 +22,17 @@ kanban-plugin: board
 	- [[Javier Diaz Urbano]]
 - [ ] Bonus - utökad sökning och sortering
 	- [[Peter Laan]]
-- [ ] Sätt begränsning på tecken på RegistrationNumber
-	- [[George Cristian Ciolponea]]
-- [ ] Byt namn/fixa hur Garage 2.0 texten ser ut
-	- [[George Cristian Ciolponea]]
 - [ ] Skapa test projekt
 	- [[Fredrik Selander]]
+- [ ] Kvitto print
 
 
 ## Pull Request
 
+- [ ] Sätt begränsning på tecken på RegistrationNumber
+	- [[George Cristian Ciolponea]]
+- [ ] Byt namn/fixa hur Garage 2.0 texten ser ut
+	- [[George Cristian Ciolponea]]
 
 
 ## Done
