@@ -255,7 +255,7 @@ public class ParkedVehiclesController : Controller
 
         _context.ParkedVehicle.Remove(vehicle);
         await _context.SaveChangesAsync();
-
+        TempData["Success"] = $"Successfully check out {vehicle} ";
         return View("Receipt", receipt);
     }
 
