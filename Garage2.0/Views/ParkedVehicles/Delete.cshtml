@@ -1,82 +1,28 @@
 @model Garage2._0.Models.ParkedVehicle
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Check Out Vehicle";
 }
 
-<h1>Delete</h1>
+<h1>Check Out Vehicle</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to check out this vehicle?</h3>
+
 <div>
-    <h4>Garage2._0.Models.ParkedVehicle</h4>
-    <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RegistrationNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RegistrationNumber)
-        </dd>
+        <dt class="col-sm-2">Registration Number</dt>
+        <dd class="col-sm-10">@Model.RegistrationNumber</dd>
+
+        <dt class="col-sm-2">Vehicle Type</dt>
+        <dd class="col-sm-10">@Model.VehicleType</dd>
+
+        <dt class="col-sm-2">Arrival Time</dt>
+        <dd class="col-sm-10">@Model.ArrivalTime</dd>
     </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ArrivalTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ArrivalTime)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VehicleType)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleModel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VehicleModel)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleBrand)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VehicleBrand)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DepartureTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DepartureTime)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Wheels)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Wheels)
-        </dd>
-    </dl>
+    
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Check Out" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

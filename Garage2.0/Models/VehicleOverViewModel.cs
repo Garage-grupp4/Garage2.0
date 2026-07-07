@@ -10,6 +10,6 @@
 
         public DateTime ArrivalTime { get; set; }
 
-        public string ParkedDuration => (DateTime.Now - ArrivalTime).ToString(@"hh\:mm\:ss");
+        public string ParkedDuration => (DateTime.Now - ArrivalTime).ToString(@"d\:hh\:mm");
     }
 }

@@ -1,0 +1,40 @@
+﻿@model Garage2._0.Models.ReceiptViewModel
+
+@{
+    ViewData["Title"] = "Parking Receipt"; 
+}
+
+<div class="container mt-4">
+    <h2>Parking Receipt</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Registration Number</dt>
+        <dd class="col-sm-9">@Model.RegistrationNumber</dd>
+
+        <dt class="col-sm-3">Vehicle Type</dt>
+        <dd class="col-sm-9">@Model.VehicleType</dd>
+
+        <dt class="col-sm-3">Brand / Model</dt>
+        <dd class="col-sm-9">@Model.VehicleBrand @Model.VehicleModel</dd>
+
+        <dt class="col-sm-3">Color</dt>
+        <dd class="col-sm-9">@Model.Color</dd>
+
+        <dt class="col-sm-3">Arrival Time</dt>
+        <dd class="col-sm-9">@Model.ArrivalTime.ToString("yy-MM-dd HH:mm")</dd>
+        
+        <dt class="col-sm-3">Departure Time</dt>
+        <dd class="col-sm-9">@Model.DepartureTime.ToString("yy-MM-dd HH:mm")</dd>
+        
+        <dt class="col-sm-3">Total Time Parked</dt>
+        <dd class="col-sm-9">@Model.TotalTimeParked.ToString(@"hh\:mm") hours</dd>
+
+        <dt class="col-sm-3">Total Price</dt>
+        <dd class="col-sm-9 font-weight-bold">@Model.TotalPrice.ToString("C")</dd>
+    </dl>
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-primary">Back to list</a>
+    </div>
+</div>
