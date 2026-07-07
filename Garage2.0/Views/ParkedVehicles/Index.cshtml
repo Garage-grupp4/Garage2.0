@@ -51,10 +51,18 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Vehicle Type</th>
-                <th>Registration number</th>
-                <th>Arrival time</th>
-                <th>Time Parked</th>
+                <th>
+                    <a asp-action="Index" asp-route-sort=@(ViewData["sort"]?.ToString() == "type" ? "type_d" : "type")>@Html.DisplayNameFor(model => model.VehicleType)</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sort=@(ViewData["sort"]?.ToString()=="license" ? "license_d" : "license")>@Html.DisplayNameFor(model => model.RegistrationNumber)</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sort=@(ViewData["sort"]?.ToString() == "start" ? "start_d" : "start")>@Html.DisplayNameFor(model => model.ArrivalTime)</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sort=@(ViewData["sort"]?.ToString() == "parked" ? "parked_d" : "parked")>@Html.DisplayNameFor(model => model.ParkedDuration)</a>
+                </th>
                 <th></th>
             </tr>
         </thead>

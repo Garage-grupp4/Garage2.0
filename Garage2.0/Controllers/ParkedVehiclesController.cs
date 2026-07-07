@@ -16,19 +16,43 @@ public class ParkedVehiclesController : Controller
     }
 
     // GET: PARKEDVEHICLES
-    public async Task<IActionResult> Index(string license, VehicleType? type)
+    public async Task<IActionResult> Index(string sort, string license, VehicleType? type)
     {
         var vehicles = _context.ParkedVehicle.Select(v => v);
 
         // Save search terms to populate html page
         ViewData["license"] = license;
         ViewData["type"] = type;
+        ViewData["sort"] = sort;
 
         // Filter with search terms
         if (!string.IsNullOrEmpty(license))
             vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().Contains(license.ToUpper()));
         if (type != null)
             vehicles = vehicles.Where(v => v.VehicleType == type);
+
+        // Sort Vehicle Type 	Registration number 	Arrival time 	Time Parked
+        switch (sort)
+        {
+            case "license":
+                vehicles = vehicles.OrderBy(v => v.RegistrationNumber);
+                break;
+            case "license_d":
+                vehicles = vehicles.OrderByDescending(v => v.RegistrationNumber);
+                break;
+            case "type":
+                vehicles = vehicles.OrderBy(v => v.VehicleType);
+                break;
+            case "type_d":
+                vehicles = vehicles.OrderByDescending(v => v.VehicleType);
+                break;
+            case "start":
+                vehicles = vehicles.OrderBy(v => v.ArrivalTime);
+                break;
+            case "start_d":
+                vehicles = vehicles.OrderByDescending(v => v.ArrivalTime);
+                break;
+        }
 
         var viewModel = (await vehicles.ToListAsync()).Select(v => new VehicleOverViewModel
         {
@@ -38,6 +62,11 @@ public class ParkedVehiclesController : Controller
             ArrivalTime = v.ArrivalTime ?? DateTime.Now
         
         }).ToList();
+
+        if (sort == "parked")
+            viewModel = viewModel.OrderBy(v => v.ParkedDuration).ToList();
+        else if (sort == "parked_d")
+            viewModel = viewModel.OrderByDescending(v => v.ParkedDuration).ToList();
 
         return View(viewModel);
     }
