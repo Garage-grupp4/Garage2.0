@@ -296,9 +296,12 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // GET: Statistics
     public async Task<IActionResult> Statistics()
     {
+        IQueryable<ParkedVehicle> vehicles = _context.ParkedVehicle;
+        
         var model = new StatisticsParkedVehicleViewModel()
         {
-            
+            // TODO Add to model
+            HowManyWheels = vehicles.Sum(v => v.Wheels),
         };
         return View(model);
     }

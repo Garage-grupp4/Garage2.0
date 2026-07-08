@@ -6,5 +6,5 @@ public class StatisticsParkedVehicleViewModel
     
     public int HowManyWheels { get; init; }
     
-    public int CurrentDept { get; init; }
+    public int TotalCost { get; init; }
 }
