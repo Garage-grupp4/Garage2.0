@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Drawing;
 
-public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
+public class ParkedVehiclesController : Controller  //viewmodel fÃ¶r att visa en lista med parkerade fordon, med mÃ¶jlighet att filtrera efter registreringsnummer och fordonstyp.
 {
     private readonly _1 _context;
 
@@ -16,20 +16,45 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en 
     }
 
     // GET: PARKEDVEHICLES
-    public async Task<IActionResult> Index(string license, VehicleType? type)
+    public async Task<IActionResult> Index(string sort, string license, VehicleType? type)
     {
         IQueryable<ParkedVehicle> vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
         // Save search terms to populate html page
         ViewData["license"] = license;
         ViewData["type"] = type;
+        ViewData["sort"] = sort;
 
         // Filter with search terms
         if (!string.IsNullOrEmpty(license))
-            vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().StartsWith(license.ToUpper())); // changed to startwith to make it more user friendly kanske använda Equals instead of ToUpper() for exact match, but then it would be case sensitive. Could use ToLower() instead of ToUpper() for case insensitive match.
+            vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().StartsWith(license.ToUpper())); // changed to startwith to make it more user friendly kanske anvÃ¤nda Equals instead of ToUpper() for exact match, but then it would be case sensitive. Could use ToLower() instead of ToUpper() for case insensitive match.
         if (type != null)
             vehicles = vehicles.Where(v => v.VehicleType == type);
 
+        // Sort Vehicle Type 	Registration number 	Arrival time 	Time Parked
+        switch (sort)
+        {
+            case "license":
+                vehicles = vehicles.OrderBy(v => v.RegistrationNumber);
+                break;
+            case "license_d":
+                vehicles = vehicles.OrderByDescending(v => v.RegistrationNumber);
+                break;
+            case "type":
+                vehicles = vehicles.OrderBy(v => v.VehicleType);
+                break;
+            case "type_d":
+                vehicles = vehicles.OrderByDescending(v => v.VehicleType);
+                break;
+            case "start":
+                vehicles = vehicles.OrderBy(v => v.ArrivalTime);
+                break;
+            case "start_d":
+                vehicles = vehicles.OrderByDescending(v => v.ArrivalTime);
+                break;
+        }
+
+        
         var viewModel = await vehicles.Select(v => new VehicleOverViewModel // 
         {
             Id = v.Id,
@@ -39,11 +64,16 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en 
         
         }).ToListAsync();
 
+        if (sort == "parked")
+            viewModel = viewModel.OrderBy(v => v.ParkedDuration).ToList();
+        else if (sort == "parked_d")
+            viewModel = viewModel.OrderByDescending(v => v.ParkedDuration).ToList();
+
         return View(viewModel);
     }
 
     //GET: PARKEDVEHICLES/Details/5
-    public async Task<IActionResult> Details(int? id) //kan göra lite snyggare här
+    public async Task<IActionResult> Details(int? id) //kan gÃ¶ra lite snyggare hÃ¤r
     {
         if (id == null)
         {
