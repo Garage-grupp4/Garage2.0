@@ -10,7 +10,7 @@ public class ParkedVehicle
 
     [StringLength(10, MinimumLength = 1, ErrorMessage = "Registration number of invalid size")]
     [Display(Name = "Registration Number")]
-    public required string RegistrationNumber { get; set; }
+    public required string RegistrationNumber { get; set; } //Custom validation
         
     [Display(Name = "Arrival Time")]
     [DisplayFormat(DataFormatString = "{0:yy-MM-dd HH:mm}")]

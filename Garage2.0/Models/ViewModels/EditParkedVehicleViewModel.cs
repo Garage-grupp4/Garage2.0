@@ -14,7 +14,7 @@ public class EditParkedVehicleViewModel
     public required string OriginalRegistrationNumber { get; init; }
     
     [Display(Name = "Arrival Time")] 
-    public DateTime ArrivalTime { get; init; }
+    public DateTime ArrivalTime { get; init; } //delete arrival time and work with a view data
     
     [Display(Name = "Type")]
     public required VehicleType VehicleType { get; set; }

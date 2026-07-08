@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Drawing;
 
-public class ParkedVehiclesController : Controller
+public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
 {
     private readonly _1 _context;
 
@@ -18,7 +18,7 @@ public class ParkedVehiclesController : Controller
     // GET: PARKEDVEHICLES
     public async Task<IActionResult> Index(string license, VehicleType? type)
     {
-        var vehicles = _context.ParkedVehicle.Select(v => v);
+        IQueryable <ParkedVehicle>vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
         // Save search terms to populate html page
         ViewData["license"] = license;
@@ -26,11 +26,11 @@ public class ParkedVehiclesController : Controller
 
         // Filter with search terms
         if (!string.IsNullOrEmpty(license))
-            vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().Contains(license.ToUpper()));
+            vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().StartsWith(license.ToUpper())); // changed to startwith to make it more user friendly kanske använda Equals instead of ToUpper() for exact match, but then it would be case sensitive. Could use ToLower() instead of ToUpper() for case insensitive match.
         if (type != null)
             vehicles = vehicles.Where(v => v.VehicleType == type);
 
-        var viewModel = (await vehicles.ToListAsync()).Select(v => new VehicleOverViewModel
+        var viewModel = (await vehicles.ToListAsync()).Select(v => new VehicleOverViewModel // man ska inte ha select före ToListAsync() 
         {
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
@@ -43,7 +43,7 @@ public class ParkedVehiclesController : Controller
     }
 
     //GET: PARKEDVEHICLES/Details/5
-    public async Task<IActionResult> Details(int? id)
+    public async Task<IActionResult> Details(int? id) //kan göra lite snyggar här
     {
         if (id == null)
         {
@@ -172,7 +172,7 @@ public class ParkedVehiclesController : Controller
         // Generate newVehicle
         ParkedVehicle newParkedVehicle = new ParkedVehicle()
         {
-            ArrivalTime = model.ArrivalTime,
+            ArrivalTime = model.ArrivalTime, //ToDo : Check if this is correct it is manipulable.
             RegistrationNumber = model.RegistrationNumber,
             VehicleBrand = model.VehicleBrand,
             VehicleModel = model.VehicleModel,

@@ -8,7 +8,7 @@ public class CreateParkedVehicleViewModel
 {
     [StringLength(10, MinimumLength = 1, ErrorMessage = "Registration number of invalid size")]
     [Display(Name = "Registration Number")]
-    public required string RegistrationNumber { get; set; }
+    public required string RegistrationNumber { get; set; } //CuStom validation. RE USE ON EDIT PARKED VEHICLE VIEW MODEL
 
     [Display(Name = "Type")]
     public required VehicleType VehicleType { get; set; }
