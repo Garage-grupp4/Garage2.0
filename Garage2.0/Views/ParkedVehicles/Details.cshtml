@@ -4,93 +4,51 @@
     ViewData["Title"] = "Vehicle Details";
 }
 
-<h1>Vehicle Details</h1>
-
-<div>
-    <h4>Parked Vehicle</h4>
+<div class="page-header">
+    <div class="page-header-row">
+        <h1>Vehicle Details</h1>
+        <span class="header-reg">@Model.RegistrationNumber</span>
+        <span class="header-meta">
+            <strong>Arrival:</strong> @Html.DisplayFor(model => model.ArrivalTime)
+        </span>
+    </div>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RegistrationNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RegistrationNumber)
-        </dd>
-    </dl>
-    
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ArrivalTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ArrivalTime)
-        </dd>
-        </dl>
-     <dl class="row">
-        <dt class = "col-sm-2">
-Parked Time
-        </dt>
-        <dd class = "col-sm-10">
-@((DateTime.Now - Model.ArrivalTime).ToString(@"d\d\ hh\:mm"))
-        </dd>
-       </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VehicleType)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleModel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VehicleModel)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleBrand)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VehicleBrand)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DepartureTime
-            )
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DepartureTime)
-        </dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-
-<dd class="col-sm-10">
-    @if (!string.IsNullOrEmpty(Model.Color))
-    {
-        <span style="display:inline-block; width:20px; height:20px; background:@Model.Color; border:1px solid #ccc; vertical-align:middle;"></span>
-    }
-</dd>
-    </dl>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Wheels)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Wheels)
-        </dd>
-    </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a> |
-    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-danger">Check Out</a> |
-    <a asp-action="Index" class="btn btn-secondary">←Back to List</a>
-    
+
+<dl class="row">
+    <dt class="col-sm-3">Parked Time</dt>
+    <dd class="col-sm-9">@((DateTime.Now - Model.ArrivalTime.Value).ToString(@"d\d\ hh\:mm"))</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleType)</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleType)</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleModel)</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleModel)</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleBrand)</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleBrand)</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DepartureTime)</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.DepartureTime)</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Color)</dt>
+    <dd class="col-sm-9">
+        @if (!string.IsNullOrEmpty(Model.Color))
+        {
+            <span class="color-swatch" style="background:@Model.Color"></span>
+        }
+        else
+        {
+            <span class="text-muted">Not specified</span>
+        }
+    </dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Wheels)</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Wheels)</dd>
+</dl>
+
+<div class="action-bar">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-danger">Check Out</a>
+    <a asp-action="Index" class="btn btn-secondary">← Back to List</a>
 </div>

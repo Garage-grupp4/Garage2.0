@@ -23,7 +23,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Car,
                 RegistrationNumber = "ABC123",
-                Color = "Röd",
+                Color = "#dc3545", // Röd
                 VehicleBrand = "Volvo",
                 VehicleModel = "V70",
                 Wheels = 4,
@@ -33,7 +33,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Motorcycle,
                 RegistrationNumber = "MC0001",
-                Color = "Svart",
+                Color = "#000000", // Svart
                 VehicleBrand = "Yamaha",
                 VehicleModel = "MT-07",
                 Wheels = 2,
@@ -43,7 +43,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Car,
                 RegistrationNumber = "DEF456",
-                Color = "Blå",
+                Color = "#0d6efd", // Blå
                 VehicleBrand = "Saab",
                 VehicleModel = "9-3",
                 Wheels = 4,
@@ -53,7 +53,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Car,
                 RegistrationNumber = "GHI789",
-                Color = "Vit",
+                Color = "#ffffff", // Vit
                 VehicleBrand = "Tesla",
                 VehicleModel = "Model 3",
                 Wheels = 4,
@@ -63,7 +63,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Car,
                 RegistrationNumber = "JKL012",
-                Color = "Silver",
+                Color = "#c0c0c0", // Silver
                 VehicleBrand = "Volkswagen",
                 VehicleModel = "Golf",
                 Wheels = 4,
@@ -73,7 +73,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Motorcycle,
                 RegistrationNumber = "MNO345",
-                Color = "Grön",
+                Color = "#198754", // Grön
                 VehicleBrand = "Kawasaki",
                 VehicleModel = "Ninja 650",
                 Wheels = 2,
@@ -83,7 +83,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Bus,
                 RegistrationNumber = "BUS001",
-                Color = "Gul",
+                Color = "#ffc107", // Gul
                 VehicleBrand = "Scania",
                 VehicleModel = "Citywide",
                 Wheels = 6,
@@ -93,7 +93,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Truck,
                 RegistrationNumber = "LKW999",
-                Color = "Röd",
+                Color = "#dc3545", // Röd
                 VehicleBrand = "Volvo",
                 VehicleModel = "FH16",
                 Wheels = 8,
@@ -103,7 +103,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Car,
                 RegistrationNumber = "PQR678",
-                Color = "Svart",
+                Color = "#000000", // Svart
                 VehicleBrand = "BMW",
                 VehicleModel = "M3",
                 Wheels = 4,
@@ -113,7 +113,7 @@ public static class SeedData
             {
                 VehicleType = VehicleType.Truck,
                 RegistrationNumber = "TRK500",
-                Color = "Vit",
+                Color = "#ffffff", // Vit
                 VehicleBrand = "Scania",
                 VehicleModel = "R500",
                 Wheels = 6,

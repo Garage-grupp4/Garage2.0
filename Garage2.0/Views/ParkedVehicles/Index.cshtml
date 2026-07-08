@@ -4,73 +4,76 @@
     ViewData["Title"] = "Garage Overview";
 }
 
-<h1>Parked Vehicles</h1>
+<div class="page-header">
+    <h1>Parked Vehicles</h1>
+    <hr />
+</div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">+Park Vehicle</a>
-</p>
 
-<form asp-action="Index" method="get" class="d-flex align-items-center gap-2">
-    <input type="text" name="license" id="search-license" class="form-control" value="@ViewData["license"]" placeholder="Registration Number" />
-    <select class="form-select" name="type" id="search-type">
-        <option value="">All Vehicle Types</option>
-        @foreach (var type in Html.GetEnumSelectList<VehicleType>())
-        {
-            if (ViewData["type"]?.ToString() == type.Text)
-            {
-                <option value="@type.Value" selected>@type.Text</option>
-            }
-            else
-            {
-                <option value="@type.Value">@type.Text</option>
-            }
-        }
-    </select>
-    <input type="submit" value="Search" class="btn btn-primary" />
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label">Search for license number</label>
+            <input type="text" name="license" class="form-control" value="@ViewData["license"]" />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Vehicle Type</label>
+            <select class="form-select" name="type">
+                <option value=""></option>
+                @foreach (var type in Html.GetEnumSelectList<VehicleType>())
+                {
+                    if (ViewData["type"]?.ToString() == type.Text)
+                    {
+                        <option value="@type.Value" selected>@type.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@type.Value">@type.Text</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a asp-action="Index" class="btn btn-secondary">Reset</a>
+        </div>
+    </div>
 </form>
 
 @if (Model.Count() == 0)
 {
-    <span>No parked vehicles found</span>
+    <div class="alert alert-info">No parked vehicles found.</div>
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped table-hover align-middle">
         <thead>
             <tr>
                 <th>
-                    <a asp-action="Index"
-                       asp-route-sort=@(ViewData["sort"]?.ToString() == "type" ? "type_d" : "type")
-                       asp-route-license=@(ViewData["license"])
-                       asp-route-type=@(ViewData["type"])>
-                        @Html.DisplayNameFor(model => model.VehicleType)
+                    <a asp-action="Index" asp-route-sort="@(ViewData["sort"]?.ToString() == "type" ? "type_d" : "type")"
+                       class="text-decoration-none text-dark">
+                        @Html.DisplayNameFor(model => model.VehicleType) ⇅
                     </a>
                 </th>
                 <th>
-                    <a asp-action="Index"
-                       asp-route-sort=@(ViewData["sort"]?.ToString() == "license" ? "license_d" : "license")
-                       asp-route-license=@(ViewData["license"])
-                       asp-route-type=@(ViewData["type"])>
-                        @Html.DisplayNameFor(model => model.RegistrationNumber)
+                    <a asp-action="Index" asp-route-sort="@(ViewData["sort"]?.ToString() == "license" ? "license_d" : "license")"
+                       class="text-decoration-none text-dark">
+                        @Html.DisplayNameFor(model => model.RegistrationNumber) ⇅
                     </a>
                 </th>
                 <th>
-                    <a asp-action="Index"
-                       asp-route-sort=@(ViewData["sort"]?.ToString() == "start" ? "start_d" : "start")
-                       asp-route-license=@(ViewData["license"])
-                       asp-route-type=@(ViewData["type"])>
-                        @Html.DisplayNameFor(model => model.ArrivalTime)
+                    <a asp-action="Index" asp-route-sort="@(ViewData["sort"]?.ToString() == "start" ? "start_d" : "start")"
+                       class="text-decoration-none text-dark">
+                        @Html.DisplayNameFor(model => model.ArrivalTime) ⇅
                     </a>
                 </th>
                 <th>
-                    <a asp-action="Index"
-                       asp-route-sort=@(ViewData["sort"]?.ToString() == "parked" ? "parked_d" : "parked")
-                       asp-route-license=@(ViewData["license"])
-                       asp-route-type=@(ViewData["type"])>
-                        @Html.DisplayNameFor(model => model.ParkedDuration)
+                    <a asp-action="Index" asp-route-sort="@(ViewData["sort"]?.ToString() == "parked" ? "parked_d" : "parked")"
+                       class="text-decoration-none text-dark">
+                        @Html.DisplayNameFor(model => model.ParkedDuration) ⇅
                     </a>
                 </th>
-                <th></th>
+                <th class="text-end">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -81,10 +84,10 @@ else
                     <td>@item.RegistrationNumber</td>
                     <td>@item.ArrivalTime</td>
                     <td>@item.ParkedDuration</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Checkout</a>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Check Out</a>
                     </td>
                 </tr>
             }
