@@ -1,10 +1,9 @@
-
 using Garage2._0.Models;
 using Garage2._0.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.Drawing;
+
+namespace Garage2._0.Controllers;
 
 public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
 {
@@ -293,5 +292,14 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     {
         return _context.ParkedVehicle.Any(e => e.Id == id);
     }
-
+    
+    // GET: Statistics
+    public async Task<IActionResult> Statistics()
+    {
+        var model = new StatisticsParkedVehicleViewModel()
+        {
+            
+        };
+        return View(model);
+    }
 }
