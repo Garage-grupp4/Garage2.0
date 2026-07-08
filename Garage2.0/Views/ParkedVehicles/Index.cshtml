@@ -1,0 +1,93 @@
+@model IEnumerable<Garage2._0.Models.VehicleOverViewModel>
+
+@{
+    ViewData["Title"] = "Garage Overview";
+}
+
+<h1>Parked Vehicles</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">+Park Vehicle</a>
+</p>
+
+<form asp-action="Index" method="get" class="d-flex align-items-center gap-2">
+    <input type="text" name="license" id="search-license" class="form-control" value="@ViewData["license"]" placeholder="Registration Number" />
+    <select class="form-select" name="type" id="search-type">
+        <option value="">All Vehicle Types</option>
+        @foreach (var type in Html.GetEnumSelectList<VehicleType>())
+        {
+            if (ViewData["type"]?.ToString() == type.Text)
+            {
+                <option value="@type.Value" selected>@type.Text</option>
+            }
+            else
+            {
+                <option value="@type.Value">@type.Text</option>
+            }
+        }
+    </select>
+    <input type="submit" value="Search" class="btn btn-primary" />
+</form>
+
+@if (Model.Count() == 0)
+{
+    <span>No parked vehicles found</span>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sort=@(ViewData["sort"]?.ToString() == "type" ? "type_d" : "type")
+                       asp-route-license=@(ViewData["license"])
+                       asp-route-type=@(ViewData["type"])>
+                        @Html.DisplayNameFor(model => model.VehicleType)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sort=@(ViewData["sort"]?.ToString() == "license" ? "license_d" : "license")
+                       asp-route-license=@(ViewData["license"])
+                       asp-route-type=@(ViewData["type"])>
+                        @Html.DisplayNameFor(model => model.RegistrationNumber)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sort=@(ViewData["sort"]?.ToString() == "start" ? "start_d" : "start")
+                       asp-route-license=@(ViewData["license"])
+                       asp-route-type=@(ViewData["type"])>
+                        @Html.DisplayNameFor(model => model.ArrivalTime)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sort=@(ViewData["sort"]?.ToString() == "parked" ? "parked_d" : "parked")
+                       asp-route-license=@(ViewData["license"])
+                       asp-route-type=@(ViewData["type"])>
+                        @Html.DisplayNameFor(model => model.ParkedDuration)
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.VehicleType</td>
+                    <td>@item.RegistrationNumber</td>
+                    <td>@item.ArrivalTime</td>
+                    <td>@item.ParkedDuration</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Checkout</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

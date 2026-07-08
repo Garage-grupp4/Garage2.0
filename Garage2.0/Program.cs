@@ -1,3 +1,6 @@
+using Garage2._0.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Garage2._0
 {
     public class Program
@@ -5,11 +8,23 @@ namespace Garage2._0
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString =
+                builder.Configuration.GetConnectionString("_1")
+                ?? throw new InvalidOperationException("Connection string '_1' not found.");
+
+            builder.Services.AddDbContext<_1>(options => options.UseSqlite(connectionString));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            // Databas
+            using (var scope = app.Services.CreateScope()) // öppna scope
+            {
+                var db = scope.ServiceProvider.GetRequiredService<_1>(); // hämta DbContext
+                SeedData.Initialize(db); // gör jobbet
+            } // scope stängs, db disposas
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -26,8 +41,9 @@ namespace Garage2._0
 
             app.MapStaticAssets();
             app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                    name: "default",
+                    pattern: "{controller=ParkedVehicles}/{action=Index}/{id?}"
+                )
                 .WithStaticAssets();
 
             app.Run();

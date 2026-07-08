@@ -1,0 +1,57 @@
+﻿@model Garage2._0.Models.ReceiptViewModel
+
+@{
+    ViewData["Title"] = "Parking Receipt"; 
+}
+
+<div class="container mt-4">
+    <h2>Parking Receipt</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Registration Number</dt>
+        <dd class="col-sm-9">@Model.RegistrationNumber</dd>
+
+        <dt class="col-sm-3">Vehicle Type</dt>
+        <dd class="col-sm-9">@Model.VehicleType</dd>
+
+        <dt class="col-sm-3">Brand / Model</dt>
+        <dd class="col-sm-9">@Model.VehicleBrand @Model.VehicleModel</dd>
+
+        <dt class="col-sm-3 d-print-none">Color</dt>
+        <dd class="col-sm-9 d-print-none">
+                @if (!string.IsNullOrEmpty(Model.Color))
+                {
+                    <span style="display:inline-block; width:20px; height:20px; background:@Model.Color; border:1px solid #ccc; vertical-align:middle;"></span>
+                }
+        </dd>
+
+        <dt class="col-sm-3">Arrival Time</dt>
+        <dd class="col-sm-9">@Model.ArrivalTime.ToString("yy-MM-dd HH:mm")</dd>
+        
+        <dt class="col-sm-3">Departure Time</dt>
+        <dd class="col-sm-9">@Model.DepartureTime.ToString("yy-MM-dd HH:mm")</dd>
+        
+        <dt class="col-sm-3">Total Time Parked</dt>
+        <dd class="col-sm-9">@Model.TotalTimeParked.ToString(@"hh\:mm") hours</dd>
+
+        <dt class="col-sm-3">Total Price</dt>
+        <dd class="col-sm-9 font-weight-bold">@Model.TotalPrice.ToString("C")</dd>
+    
+
+        <div class="mt-4 d-print-none">
+            <a asp-action="Index" class="btn btn-secondary">←Back to List</a>
+            <button onclick="window.print()" class="btn btn-secondary">Print Receipt</button>
+        </div>
+    </dl>
+</div>
+
+@section Scripts {
+    <style>
+        @@media print {
+            nav, header, footer, .btn {
+                display: none !important;
+            }
+        }
+    </style>
+}
