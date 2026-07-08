@@ -17,7 +17,7 @@
 
 <dl class="row">
     <dt class="col-sm-3">Parked Time</dt>
-    <dd class="col-sm-9">@((DateTime.Now - Model.ArrivalTime.Value).ToString(@"d\d\ hh\:mm"))</dd>
+    <dd class="col-sm-9">@((DateTime.Now - Model.ArrivalTime).ToString(@"d\d\ hh\:mm"))</dd>
 
     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleType)</dt>
     <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleType)</dd>
