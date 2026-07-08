@@ -14,7 +14,7 @@ public class ParkedVehicle
         
     [Display(Name = "Arrival Time")]
     [DisplayFormat(DataFormatString = "{0:yy-MM-dd HH:mm}")]
-    public required DateTime? ArrivalTime { get; set; }
+    public required DateTime ArrivalTime { get; set; }
 
     [Display(Name = "Vehicle Type")]
     public required VehicleType VehicleType { get; set; }

@@ -59,7 +59,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
             VehicleType = v.VehicleType,
-            ArrivalTime = v.ArrivalTime ?? DateTime.Now
+            ArrivalTime = v.ArrivalTime 
         
         }).ToListAsync();
 
@@ -173,7 +173,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             OriginalRegistrationNumber = parkedvehicle.RegistrationNumber,
             Color = parkedvehicle.Color ?? "#ffffff",
             VehicleBrand = parkedvehicle.VehicleBrand,
-            ArrivalTime = parkedvehicle.ArrivalTime ?? DateTime.MinValue,
+            ArrivalTime = parkedvehicle.ArrivalTime,
             VehicleModel = parkedvehicle.VehicleModel,
             VehicleType = parkedvehicle.VehicleType,
             Wheels = parkedvehicle.Wheels,
@@ -279,7 +279,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             VehicleModel = vehicle.VehicleModel,
             Color = vehicle.Color,
             Wheels = vehicle.Wheels,
-            ArrivalTime = vehicle.ArrivalTime ?? DateTime.Now,
+            ArrivalTime = vehicle.ArrivalTime, 
             DepartureTime = DateTime.Now
         };
 

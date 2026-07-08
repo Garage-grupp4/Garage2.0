@@ -22,7 +22,7 @@ namespace Garage2._0.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("ArrivalTime")
+                    b.Property<DateTime>("ArrivalTime")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Color")
