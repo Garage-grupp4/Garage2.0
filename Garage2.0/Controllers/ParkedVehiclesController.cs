@@ -31,7 +31,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         if (type != null)
             vehicles = vehicles.Where(v => v.VehicleType == type);
 
-        // Sort Vehicle Type 	Registration number 	Arrival time 	Time Parked
+        // Sort by Vehicle Type, Registration number, Arrival time, Time Parked
         switch (sort)
         {
             case "license":
@@ -53,7 +53,6 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
                 vehicles = vehicles.OrderByDescending(v => v.ArrivalTime);
                 break;
         }
-
         
         var viewModel = await vehicles.Select(v => new VehicleOverViewModel // 
         {

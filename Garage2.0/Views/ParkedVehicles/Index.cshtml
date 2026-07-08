@@ -7,40 +7,27 @@
 <h1>Parked Vehicles</h1>
 
 <p>
-    
     <a asp-action="Create" class="btn btn-primary">+Park Vehicle</a>
 </p>
 
-<div class="container">
-    <div class="row">
-        <form asp-action="Index" method="get">
-            <div class="col form-group">
-                <label class="control-label">Search for license number</label>
-                <input type="text" name="license" class="form-control" value="@ViewData["license"]" />
-            </div>
-            <div class="col form-group">
-                <label class="control-label">Vehicle Type</label>
-                <select class="form-select" name="type">
-                    <option value=""></option>
-                    @foreach (var type in Html.GetEnumSelectList<VehicleType>())
-                    {
-                        if (ViewData["type"]?.ToString() == type.Text)
-                        {
-                            <option value="@type.Value" selected>@type.Text</option>
-                        }
-                        else
-                        {
-                            <option value="@type.Value">@type.Text</option>
-                        }
-                    }
-                </select>
-            </div>
-            <div class="col form-group">
-                <input type="submit" value="Search" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<form asp-action="Index" method="get" class="d-flex align-items-center gap-2">
+    <input type="text" name="license" id="search-license" class="form-control" value="@ViewData["license"]" placeholder="Registration Number" />
+    <select class="form-select" name="type" id="search-type">
+        <option value="">All Vehicle Types</option>
+        @foreach (var type in Html.GetEnumSelectList<VehicleType>())
+        {
+            if (ViewData["type"]?.ToString() == type.Text)
+            {
+                <option value="@type.Value" selected>@type.Text</option>
+            }
+            else
+            {
+                <option value="@type.Value">@type.Text</option>
+            }
+        }
+    </select>
+    <input type="submit" value="Search" class="btn btn-primary" />
+</form>
 
 @if (Model.Count() == 0)
 {
@@ -52,16 +39,36 @@ else
         <thead>
             <tr>
                 <th>
-                    <a asp-action="Index" asp-route-sort=@(ViewData["sort"]?.ToString() == "type" ? "type_d" : "type")>@Html.DisplayNameFor(model => model.VehicleType)</a>
+                    <a asp-action="Index"
+                       asp-route-sort=@(ViewData["sort"]?.ToString() == "type" ? "type_d" : "type")
+                       asp-route-license=@(ViewData["license"])
+                       asp-route-type=@(ViewData["type"])>
+                        @Html.DisplayNameFor(model => model.VehicleType)
+                    </a>
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sort=@(ViewData["sort"]?.ToString()=="license" ? "license_d" : "license")>@Html.DisplayNameFor(model => model.RegistrationNumber)</a>
+                    <a asp-action="Index"
+                       asp-route-sort=@(ViewData["sort"]?.ToString() == "license" ? "license_d" : "license")
+                       asp-route-license=@(ViewData["license"])
+                       asp-route-type=@(ViewData["type"])>
+                        @Html.DisplayNameFor(model => model.RegistrationNumber)
+                    </a>
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sort=@(ViewData["sort"]?.ToString() == "start" ? "start_d" : "start")>@Html.DisplayNameFor(model => model.ArrivalTime)</a>
+                    <a asp-action="Index"
+                       asp-route-sort=@(ViewData["sort"]?.ToString() == "start" ? "start_d" : "start")
+                       asp-route-license=@(ViewData["license"])
+                       asp-route-type=@(ViewData["type"])>
+                        @Html.DisplayNameFor(model => model.ArrivalTime)
+                    </a>
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sort=@(ViewData["sort"]?.ToString() == "parked" ? "parked_d" : "parked")>@Html.DisplayNameFor(model => model.ParkedDuration)</a>
+                    <a asp-action="Index"
+                       asp-route-sort=@(ViewData["sort"]?.ToString() == "parked" ? "parked_d" : "parked")
+                       asp-route-license=@(ViewData["license"])
+                       asp-route-type=@(ViewData["type"])>
+                        @Html.DisplayNameFor(model => model.ParkedDuration)
+                    </a>
                 </th>
                 <th></th>
             </tr>
