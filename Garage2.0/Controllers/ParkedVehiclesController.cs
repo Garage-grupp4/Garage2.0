@@ -186,8 +186,12 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(EditParkedVehicleViewModel model)
+    public async Task<IActionResult> Edit(int? id,EditParkedVehicleViewModel model)
     {
+        if (id == null)
+        {
+            return NotFound();
+        }
 
         // Validate if unique number or return model error
         if (model.OriginalRegistrationNumber != model.RegistrationNumber && !await IsRegistrationNumberUnique(model.RegistrationNumber))
@@ -197,30 +201,27 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             TempData["Warning"] = warning;
             return View(model);
         }
+
+        ParkedVehicle? parkedVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.Id ==id);
+        if (parkedVehicle == null) return NotFound(); 
         
-        // Generate newVehicle
-        ParkedVehicle newParkedVehicle = new ParkedVehicle()
-        {
-            ArrivalTime = model.ArrivalTime, //ToDo : Check if this is correct it is manipulable.
-            RegistrationNumber = model.RegistrationNumber,
-            VehicleBrand = model.VehicleBrand,
-            VehicleModel = model.VehicleModel,
-            VehicleType = model.VehicleType,
-            Color = model.Color,
-            Wheels = model.Wheels,
-            Id = model.Id,
-        };
+        parkedVehicle.RegistrationNumber = model.RegistrationNumber;
+        parkedVehicle.VehicleBrand = model.VehicleBrand;
+        parkedVehicle.VehicleModel = model.VehicleModel;
+        parkedVehicle.VehicleType = model.VehicleType;
+        parkedVehicle.Color = model.Color;
+        parkedVehicle.Wheels = model.Wheels;
         
         if (ModelState.IsValid)
         {
             try
             {
-                _context.Update(newParkedVehicle);
+                _context.Update(parkedVehicle);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ParkedVehicleExists(newParkedVehicle.Id))
+                if (!ParkedVehicleExists(parkedVehicle.Id))
                 {
                     TempData["Error"] = "Vehicle not found";
                     return NotFound();
@@ -231,11 +232,11 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
                     throw;
                 }
             }
-            TempData["Success"] = $"Successfully edited Vehicle {newParkedVehicle}";
+            TempData["Success"] = $"Successfully edited Vehicle {parkedVehicle}";
             return RedirectToAction(nameof(Index));
         }
         
-        return View(newParkedVehicle);
+        return View(parkedVehicle);
     }
 
     // GET: PARKEDVEHICLES/Delete/5
