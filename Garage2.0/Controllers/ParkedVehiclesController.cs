@@ -18,7 +18,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en 
     // GET: PARKEDVEHICLES
     public async Task<IActionResult> Index(string license, VehicleType? type)
     {
-        IQueryable <ParkedVehicle>vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
+        IQueryable<ParkedVehicle> vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
         // Save search terms to populate html page
         ViewData["license"] = license;
@@ -30,20 +30,20 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en 
         if (type != null)
             vehicles = vehicles.Where(v => v.VehicleType == type);
 
-        var viewModel = (await vehicles.ToListAsync()).Select(v => new VehicleOverViewModel // man ska inte ha select före ToListAsync() 
+        var viewModel = await vehicles.Select(v => new VehicleOverViewModel // 
         {
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
             VehicleType = v.VehicleType,
             ArrivalTime = v.ArrivalTime ?? DateTime.Now
         
-        }).ToList();
+        }).ToListAsync();
 
         return View(viewModel);
     }
 
     //GET: PARKEDVEHICLES/Details/5
-    public async Task<IActionResult> Details(int? id) //kan göra lite snyggar här
+    public async Task<IActionResult> Details(int? id) //kan göra lite snyggare här
     {
         if (id == null)
         {
