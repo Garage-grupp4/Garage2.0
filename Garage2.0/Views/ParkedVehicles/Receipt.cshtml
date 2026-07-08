@@ -18,8 +18,8 @@
         <dt class="col-sm-3">Brand / Model</dt>
         <dd class="col-sm-9">@Model.VehicleBrand @Model.VehicleModel</dd>
 
-        <dt class="col-sm-3">Color</dt>
-        <dd class="col-sm-9">
+        <dt class="col-sm-3 d-print-none">Color</dt>
+        <dd class="col-sm-9 d-print-none">
                 @if (!string.IsNullOrEmpty(Model.Color))
                 {
                     <span style="display:inline-block; width:20px; height:20px; background:@Model.Color; border:1px solid #ccc; vertical-align:middle;"></span>
@@ -38,13 +38,12 @@
         <dt class="col-sm-3">Total Price</dt>
         <dd class="col-sm-9 font-weight-bold">@Model.TotalPrice.ToString("C")</dd>
     
-    </dl>
 
-    <div class="mt-4">
-        <a asp-action="Index" class="btn btn-secondary">←Back to List</a>
-        <button onclick="window.print()" class="btn btn-secondary">Print Receipt</button>
-    </div>
-</dl>
+        <div class="mt-4 d-print-none">
+            <a asp-action="Index" class="btn btn-secondary">←Back to List</a>
+            <button onclick="window.print()" class="btn btn-secondary">Print Receipt</button>
+        </div>
+    </dl>
 </div>
 
 @section Scripts {
