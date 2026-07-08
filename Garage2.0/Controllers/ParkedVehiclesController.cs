@@ -2,6 +2,7 @@ using Garage2._0.Models;
 using Garage2._0.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Garage2._0.Helpers;
 
 namespace Garage2._0.Controllers;
 
@@ -296,11 +297,13 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // GET: Statistics
     public async Task<IActionResult> Statistics()
     {
-        IQueryable<ParkedVehicle> vehicles = _context.ParkedVehicle;
+        List<ParkedVehicle> vehicles = await _context.ParkedVehicle.ToListAsync();
         
         var model = new StatisticsParkedVehicleViewModel()
         {
             // TODO Add to model
+            VehicleCount = vehicles.CountBy(vehicle => vehicle.VehicleType),
+            TotalCost = vehicles.Sum(v => PriceHelper.CalulatePrice(v.ArrivalTime)),
             HowManyWheels = vehicles.Sum(v => v.Wheels),
         };
         return View(model);

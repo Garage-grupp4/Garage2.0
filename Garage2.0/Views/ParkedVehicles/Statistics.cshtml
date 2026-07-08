@@ -8,7 +8,13 @@
 <div>
     <h2>Stats</h2>
     <p>
-        How many wheels: @Html.DisplayFor(model => model.HowManyWheels) 
+        @Html.DisplayFor(model => model.VehicleCount) 
+    </p>
+    <p>
+        @Html.DisplayFor(model => model.TotalCost) kr 
+    </p>
+    <p>
+        How many wheels: @Html.DisplayFor(model => model.HowManyWheels)
     </p>
 </div>
 </body>
