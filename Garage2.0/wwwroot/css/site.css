@@ -29,3 +29,74 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* ============================================
+   Garage 2.0 — Shared view styling
+   ============================================ */
+
+/* Page header — used at the top of every view */
+.page-header {
+    margin-bottom: 1.5rem;
+}
+.page-header h1 {
+    font-size: 1.75rem;   /* 28px istället för Bootstraps default 2.5rem (40px) */
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.page-header hr {
+    margin-top: 0.5rem;
+}
+
+/* Header row with meta info (registration, arrival time etc) */
+.page-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 1rem;
+}
+.page-header-row h1 {
+    margin-bottom: 0;
+}
+.page-header-row .header-reg {
+    font-size: 1.25rem;
+    color: #6c757d;
+}
+.page-header-row .header-meta {
+    margin-left: auto;
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+/* Definition list rows — Details, Delete, Receipt */
+dl.row dt {
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+}
+dl.row dd {
+    padding-bottom: 0.5rem;
+}
+
+/* Color swatch — Details, Receipt */
+.color-swatch {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    vertical-align: middle;
+}
+
+/* Action bar — standard button row at bottom of every page */
+.action-bar {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e5e5;
+}
+.action-bar .btn + .btn {
+    margin-left: 0.5rem;
+}
+
+/* Form container — used on Create and Edit */
+.form-container {
+    max-width: 500px;
+}
