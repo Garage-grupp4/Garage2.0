@@ -11,7 +11,16 @@ namespace Garage2._0
             var connectionString =
                 builder.Configuration.GetConnectionString("GarageContext")
                 ?? throw new InvalidOperationException("Connection string 'GarageContext' not found.");
-
+            
+            var provider = builder.Configuration["DbProvider"] ?? "Sqlite";
+ 
+            builder.Services.AddDbContext<GarageContext>(opt =>
+            {
+                if (provider == "SqlServer")
+                    opt.UseSqlServer(builder.Configuration.GetConnectionString("AzureSql"));
+                else
+                    opt.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
+            });
             builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
 
             // Add services to the container.
