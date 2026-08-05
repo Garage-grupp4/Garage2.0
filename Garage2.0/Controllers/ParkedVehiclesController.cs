@@ -8,9 +8,9 @@ using System.Drawing;
 
 public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
 {
-    private readonly _1 _context;
+    private readonly GarageContext _context;
 
-    public ParkedVehiclesController(_1 context)
+    public ParkedVehiclesController(GarageContext context)
     {
         _context = context;
     }

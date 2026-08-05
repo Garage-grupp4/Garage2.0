@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,11 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage2._0.Migrations
 {
     [DbContext(typeof(GarageContext))]
-    [Migration("20260706083627_UpdateColorAndDisplay")]
-    partial class UpdateColorAndDisplay
+    partial class GarageContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
@@ -25,35 +22,38 @@ namespace Garage2._0.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("arrivalTime")
+                    b.Property<DateTime>("ArrivalTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("color")
+                    b.Property<string>("Color")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DepartureTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RegistrationNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VehicleBrand")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("departureTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("registrationNumber")
+                    b.Property<string>("VehicleModel")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("vehicleBrand")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("vehicleModel")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("vehicleType")
+                    b.Property<int>("VehicleType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("wheels")
+                    b.Property<int>("Wheels")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RegistrationNumber")
+                        .IsUnique();
 
                     b.ToTable("ParkedVehicle");
                 });

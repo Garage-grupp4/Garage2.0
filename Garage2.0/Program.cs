@@ -9,10 +9,10 @@ namespace Garage2._0
         {
             var builder = WebApplication.CreateBuilder(args);
             var connectionString =
-                builder.Configuration.GetConnectionString("_1")
-                ?? throw new InvalidOperationException("Connection string '_1' not found.");
+                builder.Configuration.GetConnectionString("GarageContext")
+                ?? throw new InvalidOperationException("Connection string 'GarageContext' not found.");
 
-            builder.Services.AddDbContext<_1>(options => options.UseSqlite(connectionString));
+            builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -22,7 +22,7 @@ namespace Garage2._0
             // Databas
             using (var scope = app.Services.CreateScope()) // öppna scope
             {
-                var db = scope.ServiceProvider.GetRequiredService<_1>(); // hämta DbContext
+                var db = scope.ServiceProvider.GetRequiredService<GarageContext>(); // hämta DbContext
                 SeedData.Initialize(db); // gör jobbet
             } // scope stängs, db disposas
 

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Garage2._0.Migrations
 {
-    [DbContext(typeof(_1))]
+    [DbContext(typeof(GarageContext))]
     [Migration("20260702142235_Init")]
     partial class Init
     {
