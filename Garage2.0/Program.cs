@@ -17,7 +17,7 @@ namespace Garage2._0
             builder.Services.AddDbContext<GarageContext>(opt =>
             {
                 if (provider == "SqlServer")
-                    opt.UseSqlServer(builder.Configuration.GetConnectionString("AzureSql"));
+                    opt.UseSqlServer(builder.Configuration.GetConnectionString(connectionString));
                 else
                     opt.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
             });
