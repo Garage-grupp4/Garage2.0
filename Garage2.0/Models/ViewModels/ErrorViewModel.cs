@@ -1,9 +1,9 @@
-namespace Garage2._0.Models
+namespace Garage2._0.Models.ViewModels
 {
-    public class ErrorViewModel
-    {
-        public string? RequestId { get; set; }
+  public class ErrorViewModel
+  {
+    public string? RequestId { get; set; }
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-    }
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+  }
 }
