@@ -3,50 +3,53 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Garage2._0
 {
-    public class Program
+  public class Program
+  {
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-            var connectionString =
-                builder.Configuration.GetConnectionString("_1")
-                ?? throw new InvalidOperationException("Connection string '_1' not found.");
+      var builder = WebApplication.CreateBuilder(args);
+      var connectionString =
+          builder.Configuration.GetConnectionString("_1")
+          ?? throw new InvalidOperationException("Connection string '_1' not found.");
 
-            builder.Services.AddDbContext<_1>(options => options.UseSqlite(connectionString));
+      // builder.Services.AddDbContext<_1>(options => options.UseSqlite(connectionString));
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+      builder.Services.AddDbContext<_1>(options =>
+          options.UseSqlServer(connectionString));
 
-            var app = builder.Build();
+      // Add services to the container.
+      builder.Services.AddControllersWithViews();
 
-            // Databas
-            using (var scope = app.Services.CreateScope()) // öppna scope
-            {
-                var db = scope.ServiceProvider.GetRequiredService<_1>(); // hämta DbContext
-                SeedData.Initialize(db); // gör jobbet
-            } // scope stängs, db disposas
+      var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+      // Databas
+      using (var scope = app.Services.CreateScope()) // öppna scope
+      {
+        var db = scope.ServiceProvider.GetRequiredService<_1>(); // hämta DbContext
+        SeedData.Initialize(db); // gör jobbet
+      } // scope stängs, db disposas
 
-            app.UseHttpsRedirection();
-            app.UseRouting();
+      // Configure the HTTP request pipeline.
+      if (!app.Environment.IsDevelopment())
+      {
+        app.UseExceptionHandler("/Home/Error");
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
+      }
 
-            app.UseAuthorization();
+      app.UseHttpsRedirection();
+      app.UseRouting();
 
-            app.MapStaticAssets();
-            app.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=ParkedVehicles}/{action=Index}/{id?}"
-                )
-                .WithStaticAssets();
+      app.UseAuthorization();
 
-            app.Run();
-        }
+      app.MapStaticAssets();
+      app.MapControllerRoute(
+              name: "default",
+              pattern: "{controller=ParkedVehicles}/{action=Index}/{id?}"
+          )
+          .WithStaticAssets();
+
+      app.Run();
     }
+  }
 }
