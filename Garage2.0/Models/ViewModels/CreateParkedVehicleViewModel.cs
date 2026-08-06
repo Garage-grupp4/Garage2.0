@@ -16,11 +16,11 @@ public class CreateParkedVehicleViewModel
     [StringLength(20, ErrorMessage = "Name length can't be more than 20.")]
     [Display(Name = "Model")]
     public required string VehicleModel { get; set; }
-    
+
     [StringLength(20, ErrorMessage = "Name length can't be more than 20.")]
     [Display(Name = "Brand")]
     public required string VehicleBrand { get; set; }
-    
+
     [Display(Name = "Vehicle Color")]
     public string Color { get; set; }
 

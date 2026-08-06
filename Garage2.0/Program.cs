@@ -1,5 +1,9 @@
 using Garage2._0.Data;
+using Garage2._0.Models;
+using Garage2._0.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Garage2._0
 {
@@ -11,20 +15,45 @@ namespace Garage2._0
             var connectionString =
                 builder.Configuration.GetConnectionString("GarageContext")
                 ?? throw new InvalidOperationException("Connection string 'GarageContext' not found.");
-            
+
             var provider = builder.Configuration["DbProvider"] ?? "Sqlite";
- 
+
             builder.Services.AddDbContext<GarageContext>(opt =>
             {
                 if (provider == "SqlServer")
-                    opt.UseSqlServer(builder.Configuration.GetConnectionString(connectionString));
+                    opt.UseSqlServer(connectionString);
                 else
-                    opt.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
+                    opt.UseSqlite(connectionString);
             });
-            builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
 
-            // Add services to the container.
+            // builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
+
+            // implementera Auth
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                {
+                    // TODO(#13): Höj lösenordskrav innan produktion (US01 acceptanskriterier)
+                    options.SignIn.RequireConfirmedAccount = false; // dev-läge, ingen mmailbekräftelse
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
+                })
+              .AddEntityFrameworkStores<GarageContext>()
+               .AddDefaultTokenProviders();
+
+            // Cookie paths
+            builder.Services.ConfigureApplicationCookie(options =>
+          {
+              options.LoginPath = "/Identity/Account/Login";
+              options.LogoutPath = "/Identity/Account/Logout";
+              options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+          });
+
+            // Mvc + Razor + Email
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
+            builder.Services.AddTransient<IEmailSender, GarageEmailSender>();
 
             var app = builder.Build();
 
@@ -46,6 +75,7 @@ namespace Garage2._0
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
@@ -54,6 +84,8 @@ namespace Garage2._0
                     pattern: "{controller=ParkedVehicles}/{action=Index}/{id?}"
                 )
                 .WithStaticAssets();
+
+            app.MapRazorPages(); // för att scafooldin ska funka
 
             app.Run();
         }
