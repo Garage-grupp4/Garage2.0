@@ -175,6 +175,7 @@ public static class SeedData
             Email = accountEmail,
             FirstName = fName,
             LastName = lName,
+            PersonNumber = "1111111111111",
             EmailConfirmed = true
         };
         
