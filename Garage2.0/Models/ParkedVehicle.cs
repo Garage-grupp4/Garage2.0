@@ -11,20 +11,20 @@ public class ParkedVehicle
     [StringLength(10, MinimumLength = 1, ErrorMessage = "Registration number of invalid size")]
     [Display(Name = "Registration Number")]
     public required string RegistrationNumber { get; set; } //Custom validation
-        
+
+    //ToDo: Move to parking session
     [Display(Name = "Arrival Time")]
     [DisplayFormat(DataFormatString = "{0:yy-MM-dd HH:mm}")]
     public required DateTime ArrivalTime { get; set; }
 
-    [Display(Name = "Vehicle Type")]
-    public required VehicleType VehicleType { get; set; }
-        
+
     [Display(Name = "Model")]
     public required string VehicleModel { get; set; }
 
     [Display(Name = "Brand")]
     public required string VehicleBrand { get; set; }
 
+    //ToDo: Move to parking session
     public DateTime? DepartureTime { get; set; }
 
     public string? Color { get; set; }
@@ -36,4 +36,10 @@ public class ParkedVehicle
     {
         return $"{VehicleType} {RegistrationNumber}";
     }
+
+    [Display(Name = "Vehicle Type")]
+    public required VehicleType VehicleType { get; set; }
+
+    public int VehicleTypeId { get; set; } 
+
 }

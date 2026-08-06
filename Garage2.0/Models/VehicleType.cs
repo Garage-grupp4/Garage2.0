@@ -2,18 +2,12 @@
 
 namespace Garage2._0.Models
 {
-    public enum VehicleType
+    public class VehicleType
     {
-        [Display(Name = "Car")]
-        Car,
+        public  int Id { get; set; }
 
-        [Display(Name = "Bus")]
-        Bus,
+        public required string Name { get; set; }
 
-        [Display(Name = "Truck")]
-        Truck,
-
-        [Display(Name = "Motorcycle")]
-        Motorcycle,
+        public ICollection<ParkedVehicle> Vehicles { get; set; } = [];
     }
 }

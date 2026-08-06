@@ -20,7 +20,7 @@
             <label class="form-label">Vehicle Type</label>
             <select class="form-select" name="type">
                 <option value=""></option>
-                @foreach (var type in Html.GetEnumSelectList<VehicleType>())
+                @* @foreach (var type in Html.GetEnumSelectList<VehicleType>())
                 {
                     if (ViewData["type"]?.ToString() == type.Text)
                     {
@@ -30,7 +30,7 @@
                     {
                         <option value="@type.Value">@type.Text</option>
                     }
-                }
+                } *@
             </select>
         </div>
         <div class="col-md-4">
