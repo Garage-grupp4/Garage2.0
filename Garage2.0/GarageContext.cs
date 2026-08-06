@@ -8,6 +8,11 @@ public class GarageContext(DbContextOptions<GarageContext> options) : DbContext(
     {
         modelBuilder.Entity<Vehicle>().HasIndex(p => p.RegistrationNumber).IsUnique();
 
+        modelBuilder.Entity<ParkingSpot>().HasIndex(p => p.Number).IsUnique();
+
+        modelBuilder.Entity<VehicleType>().HasIndex(vt => vt.Name).IsUnique();
+
+
         modelBuilder.Entity<ParkingSession>()
             .HasOne(ps => ps.Vehicle)
             .WithMany(v => v.ParkingSessions)
