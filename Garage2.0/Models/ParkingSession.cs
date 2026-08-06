@@ -20,8 +20,10 @@ namespace Garage2._0.Models
         [Display(Name = "Departure time")]
         public DateTime? DepartureTime { get; set; }
 
+        [Column(TypeName = "decimal(10,2)")]
         public decimal HourlyRateForParking { get; set; }
 
+        [Column(TypeName = "decimal(10,2)")]
         public decimal? TotalCost { get; set; }
     }
 }
