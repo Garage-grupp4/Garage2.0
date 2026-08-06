@@ -1,16 +1,18 @@
-
+using Microsoft.EntityFrameworkCore;
+using Garage2._0.Data;
 using Garage2._0.Models;
 using Garage2._0.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.Drawing;
+using Microsoft.AspNetCore.Authorization;
 
+namespace Garage2._0.Controllers;
+
+[Authorize]
 public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
 {
-    private readonly _1 _context;
+    private readonly GarageContext _context;
 
-    public ParkedVehiclesController(_1 context)
+    public ParkedVehiclesController(GarageContext context)
     {
         _context = context;
     }
@@ -53,14 +55,14 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
                 vehicles = vehicles.OrderByDescending(v => v.ArrivalTime);
                 break;
         }
-        
+
         var viewModel = await vehicles.Select(v => new VehicleOverViewModel // 
         {
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
             VehicleType = v.VehicleType,
-            ArrivalTime = v.ArrivalTime 
-        
+            ArrivalTime = v.ArrivalTime
+
         }).ToListAsync();
 
         if (sort == "parked")
@@ -110,7 +112,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             TempData["Warning"] = warning;
             return View(model);
         }
-        
+
         // Generate newVehicle
         ParkedVehicle newParkedVehicle = new ParkedVehicle()
         {
@@ -122,7 +124,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             Color = model.Color,
             Wheels = model.Wheels
         };
-        
+
         // Send to Database
         if (ModelState.IsValid)
         {
@@ -131,16 +133,16 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             TempData["Success"] = $"Successfully Parked {newParkedVehicle} at {newParkedVehicle.ArrivalTime}";
             return RedirectToAction(nameof(Index));
         }
-        ViewData["Error"] = "Error message text."; 
+        ViewData["Error"] = "Error message text.";
         return View();
     }
-    
+
     private async Task<bool> IsRegistrationNumberUnique(string registrationNumber)
     {
         return !await _context.ParkedVehicle
             .AnyAsync(v => v.RegistrationNumber == registrationNumber);
     }
-    
+
     [AcceptVerbs("GET", "POST")]
     public async Task<IActionResult> VerifyRegistrationNumber(string registationNumber)
     {
@@ -186,7 +188,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id,EditParkedVehicleViewModel model)
+    public async Task<IActionResult> Edit(int? id, EditParkedVehicleViewModel model)
     {
         if (id == null)
         {
@@ -202,16 +204,16 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return View(model);
         }
 
-        ParkedVehicle? parkedVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.Id ==id);
-        if (parkedVehicle == null) return NotFound(); 
-        
+        ParkedVehicle? parkedVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.Id == id);
+        if (parkedVehicle == null) return NotFound();
+
         parkedVehicle.RegistrationNumber = model.RegistrationNumber;
         parkedVehicle.VehicleBrand = model.VehicleBrand;
         parkedVehicle.VehicleModel = model.VehicleModel;
         parkedVehicle.VehicleType = model.VehicleType;
         parkedVehicle.Color = model.Color;
         parkedVehicle.Wheels = model.Wheels;
-        
+
         if (ModelState.IsValid)
         {
             try
@@ -235,7 +237,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             TempData["Success"] = $"Successfully edited Vehicle {parkedVehicle}";
             return RedirectToAction(nameof(Index));
         }
-        
+
         return View(parkedVehicle);
     }
 
@@ -249,7 +251,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
 
         var vehicle = await _context.ParkedVehicle
             .FirstOrDefaultAsync(m => m.Id == id);
-        
+
         if (vehicle == null)
         {
             return NotFound();
@@ -264,7 +266,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var vehicle = await _context.ParkedVehicle.FindAsync(id);
-        
+
         if (vehicle == null)
         {
             return NotFound();
@@ -279,7 +281,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             VehicleModel = vehicle.VehicleModel,
             Color = vehicle.Color,
             Wheels = vehicle.Wheels,
-            ArrivalTime = vehicle.ArrivalTime, 
+            ArrivalTime = vehicle.ArrivalTime,
             DepartureTime = DateTime.Now
         };
 

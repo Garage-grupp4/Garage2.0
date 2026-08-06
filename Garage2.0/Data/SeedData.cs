@@ -5,7 +5,7 @@ namespace Garage2._0.Data;
 
 public static class SeedData
 {
-    public static void Initialize(_1 db)
+    public static void Initialize(GarageContext db)
     {
         Console.WriteLine("→ Kontrollerar databasen...");
         db.Database.Migrate();
