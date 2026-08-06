@@ -1,10 +1,7 @@
-
 using Garage2._0.Models;
 using Garage2._0.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.Drawing;
 
 public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
 {
@@ -18,7 +15,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // GET: PARKEDVEHICLES
     public async Task<IActionResult> Index(string sort, string license, VehicleType? type)
     {
-        IQueryable<ParkedVehicle> vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
+        IQueryable<Vehicle> vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
         // Save search terms to populate html page
         ViewData["license"] = license;
@@ -112,7 +109,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         }
         
         // Generate newVehicle
-        ParkedVehicle newParkedVehicle = new ParkedVehicle()
+        Vehicle newParkedVehicle = new Vehicle()
         {
             ArrivalTime = DateTime.Now,
             RegistrationNumber = model.RegistrationNumber,
@@ -144,7 +141,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     [AcceptVerbs("GET", "POST")]
     public async Task<IActionResult> VerifyRegistrationNumber(string registationNumber)
     {
-        IEnumerable<ParkedVehicle> list = await _context.ParkedVehicle.ToListAsync();
+        IEnumerable<Vehicle> list = await _context.ParkedVehicle.ToListAsync();
         if (list.Any(v => v.RegistrationNumber == registationNumber))
         {
             return Json($"Email {registationNumber} is already in use.");
@@ -202,7 +199,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return View(model);
         }
 
-        ParkedVehicle? parkedVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.Id ==id);
+        Vehicle? parkedVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.Id ==id);
         if (parkedVehicle == null) return NotFound(); 
         
         parkedVehicle.RegistrationNumber = model.RegistrationNumber;

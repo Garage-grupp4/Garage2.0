@@ -1,4 +1,4 @@
-@model Garage2._0.Models.ParkedVehicle
+@model Garage2._0.Models.Vehicle
 
 @{
     ViewData["Title"] = "Vehicle Details";
@@ -9,7 +9,7 @@
         <h1>Vehicle Details</h1>
         <span class="header-reg">@Model.RegistrationNumber</span>
         <span class="header-meta">
-            <strong>Arrival:</strong> @Html.DisplayFor(model => model.ArrivalTime)
+            <strong>Arrival:</strong> @Html.DisplayFor(model => model.CheckInTime)
         </span>
     </div>
     <hr />

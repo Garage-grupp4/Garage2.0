@@ -8,6 +8,6 @@ namespace Garage2._0.Models
 
         public required string Name { get; set; }
 
-        public ICollection<ParkedVehicle> Vehicles { get; set; } = [];
+        public ICollection<Vehicle> Vehicles { get; set; } = [];
     }
 }
