@@ -13,9 +13,9 @@ namespace Garage2._0.Models
         public VehicleType VehicleType { get; set; }
 
         [Display(Name = "Arrival Time")]
-        public DateTime ArrivalTime { get; set; }
+        public DateTime? ArrivalTime { get; set; }
 
         [Display(Name = "Parked Duration")]
-        public string ParkedDuration => (DateTime.Now - ArrivalTime).ToString(@"d\:hh\:mm");
+        public string ParkedDuration => ArrivalTime.HasValue ? (DateTime.Now - ArrivalTime.Value).ToString(@"d\:hh\:mm") : string.Empty;
     }
 }

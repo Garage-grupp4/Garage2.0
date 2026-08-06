@@ -31,6 +31,7 @@ public class Vehicle
     [Display(Name = "Vehicle Type")]
     public required VehicleType VehicleType { get; set; }
 
-    public int VehicleTypeId { get; set; } 
+    public int VehicleTypeId { get; set; }
 
+    public ICollection<ParkingSession> ParkingSessions { get; set; } = new List<ParkingSession>();
 }

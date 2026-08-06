@@ -3,6 +3,7 @@ using Garage2._0.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
 {
     private readonly GarageContext _context;
@@ -44,10 +45,18 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
                 vehicles = vehicles.OrderByDescending(v => v.VehicleType);
                 break;
             case "start":
-                vehicles = vehicles.OrderBy(v => v.ArrivalTime);
+                vehicles = vehicles.OrderBy(v => 
+                v.ParkingSessions
+                    .Where(ps => ps.DepartureTime == null)
+                    .Select(ps => ps.ArrivalTime)
+                    .FirstOrDefault());
                 break;
             case "start_d":
-                vehicles = vehicles.OrderByDescending(v => v.ArrivalTime);
+                vehicles = vehicles.OrderByDescending(v => 
+                v.ParkingSessions
+                    .Where(ps => ps.DepartureTime == null)
+                    .Select(ps => ps.ArrivalTime)
+                    .FirstOrDefault());
                 break;
         }
         
@@ -56,8 +65,11 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
             VehicleType = v.VehicleType,
-            ArrivalTime = v.ArrivalTime 
-        
+            ArrivalTime = v.ParkingSessions
+                .Where(ps => ps.DepartureTime == null)
+                .Select(ps => (DateTime?)ps.ArrivalTime)
+                .FirstOrDefault(),
+
         }).ToListAsync();
 
         if (sort == "parked")
@@ -111,7 +123,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         // Generate newVehicle
         Vehicle newParkedVehicle = new Vehicle()
         {
-            ArrivalTime = DateTime.Now,
+            //ArrivalTime = DateTime.Now, ToDo (In later task): set ArrivalTime by creating a ParkingSession here once parking flow exists
             RegistrationNumber = model.RegistrationNumber,
             VehicleBrand = model.VehicleBrand,
             VehicleModel = model.VehicleModel,
@@ -125,7 +137,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         {
             _context.Add(newParkedVehicle);
             await _context.SaveChangesAsync();
-            TempData["Success"] = $"Successfully Parked {newParkedVehicle} at {newParkedVehicle.ArrivalTime}";
+            TempData["Success"] = $"Successfully Parked {newParkedVehicle}"; // at {newParkedVehicle.ArrivalTime}";
             return RedirectToAction(nameof(Index));
         }
         ViewData["Error"] = "Error message text."; 
@@ -170,7 +182,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             OriginalRegistrationNumber = parkedvehicle.RegistrationNumber,
             Color = parkedvehicle.Color ?? "#ffffff",
             VehicleBrand = parkedvehicle.VehicleBrand,
-            ArrivalTime = parkedvehicle.ArrivalTime,
+            //ArrivalTime = parkedvehicle.ArrivalTime, TODO: ArrivalTime removed — no longer belongs on Vehicle, it's on ParkingSession now (can not be edited here)
             VehicleModel = parkedvehicle.VehicleModel,
             VehicleType = parkedvehicle.VehicleType,
             Wheels = parkedvehicle.Wheels,
@@ -276,7 +288,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             VehicleModel = vehicle.VehicleModel,
             Color = vehicle.Color,
             Wheels = vehicle.Wheels,
-            ArrivalTime = vehicle.ArrivalTime, 
+            //ArrivalTime = vehicle.ArrivalTime,  TODO (In Later Task): ArrivalTime/DepartureTime now come from the active ParkingSession, not Vehicle — checkout flow needs rework
             DepartureTime = DateTime.Now
         };
 
