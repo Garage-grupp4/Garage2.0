@@ -18,6 +18,15 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Role)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PersonNumber)
+                </th>
                 <th class="text-end">Actions</th>
             </tr>
         </thead>
@@ -27,6 +36,9 @@
                 <tr>
                     <td>@item.Email</td>
                     <td>@item.Role</td>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.PersonNumber</td>
                     <td class="text-end">
                         <form asp-action="AdminToggle" asp-route-email="@item.Email" method="post">
                             @Html.AntiForgeryToken()
@@ -34,17 +46,6 @@
                                 @(item.Role == Roles.ADMIN ? "Remove as Admin" : "Set as Admin")
                             </button>
                         </form>
-                <!--
-                @if (item.Role == Roles.ADMIN)
-                {
-
-                    <a asp-action="RemoveAdminRole" asp-route-email="@item.Email" class="btn btn-sm btn-warning">Remove Admin Role</a>
-                }
-                else
-                {
-                    <a asp-action="AddAdminRole" asp-route-email="@item.Email" class="btn btn-sm btn-warning">Set to Admin</a>
-                }
-                -->
                     </td>
                 </tr>
             }
