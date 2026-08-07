@@ -1,4 +1,5 @@
-@model IEnumerable<ApplicationUser>
+@using Garage2._0.Constants
+@model IEnumerable<ApplicationUserViewModel>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -12,10 +13,10 @@
         <thead>
             <tr>
                 <th>
-                    <a asp-action="Index" 
-                       class="text-decoration-none text-dark">
-                        @Html.DisplayNameFor(model => model.Email) ⇅
-                    </a>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Role)
                 </th>
                 <th class="text-end">Actions</th>
             </tr>
@@ -25,9 +26,25 @@
             {
                 <tr>
                     <td>@item.Email</td>
+                    <td>@item.Role</td>
                     <td class="text-end">
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Set to Admin</a>
-       
+                        <form asp-action="AdminToggle" asp-route-email="@item.Email" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm @(item.Role == Roles.ADMIN ? "btn-danger" : "btn-warning") w-100">
+                                @(item.Role == Roles.ADMIN ? "Remove as Admin" : "Set as Admin")
+                            </button>
+                        </form>
+                <!--
+                @if (item.Role == Roles.ADMIN)
+                {
+
+                    <a asp-action="RemoveAdminRole" asp-route-email="@item.Email" class="btn btn-sm btn-warning">Remove Admin Role</a>
+                }
+                else
+                {
+                    <a asp-action="AddAdminRole" asp-route-email="@item.Email" class="btn btn-sm btn-warning">Set to Admin</a>
+                }
+                -->
                     </td>
                 </tr>
             }
