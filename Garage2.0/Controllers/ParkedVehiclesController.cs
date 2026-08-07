@@ -81,7 +81,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         else if (sort == "parked_d")
             viewModel = viewModel.OrderByDescending(v => v.ParkedDuration).ToList();
 
-        return View(viewModel);
+        return View(nameof(Index), viewModel);
     }
 
     //GET: PARKEDVEHICLES/Details/5

@@ -7,10 +7,10 @@ namespace Garage2._0.Models
     {
         public int Id { get; set; }
 
-        public required int VehicleId { get; set; }
+        public  int VehicleId { get; set; }
         public Vehicle Vehicle { get; set; } = null!;
 
-        public required int ParkingSpotId { get; set; }
+        public  int ParkingSpotId { get; set; }
         public ParkingSpot ParkingSpot { get; set; } = null!;
 
         [Display(Name = "Arrival time")]

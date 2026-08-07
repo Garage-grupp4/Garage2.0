@@ -22,6 +22,7 @@ public class Vehicle
 
     [Range(0, 64)]
     public required int Wheels { get; set; }
+    public int VehicleTypeId { get; set; }
 
     public override string ToString()
     {
@@ -31,7 +32,6 @@ public class Vehicle
     [Display(Name = "Vehicle Type")]
     public required VehicleType VehicleType { get; set; }
 
-    public int VehicleTypeId { get; set; }
 
     public ICollection<ParkingSession> ParkingSessions { get; set; } = new List<ParkingSession>();
 }
