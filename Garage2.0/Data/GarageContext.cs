@@ -1,7 +1,10 @@
 using Garage2._0.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class GarageContext(DbContextOptions<GarageContext> options) : DbContext(options)
+namespace Garage2._0.Data;
+
+public class GarageContext(DbContextOptions<GarageContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Garage2._0.Models.Vehicle> ParkedVehicle { get; set; } = default!;
     protected override void OnModelCreating(ModelBuilder modelBuilder)

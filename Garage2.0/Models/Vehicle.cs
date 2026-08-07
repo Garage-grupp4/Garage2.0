@@ -5,7 +5,7 @@ namespace Garage2._0.Models;
 
 public class Vehicle
 {
-        
+
     public int Id { get; set; }
 
     [StringLength(10, MinimumLength = 1, ErrorMessage = "Registration number of invalid size")]
@@ -20,7 +20,7 @@ public class Vehicle
 
     public string? Color { get; set; }
 
-    [Range(0, 64)] 
+    [Range(0, 64)]
     public required int Wheels { get; set; }
 
     public override string ToString()
