@@ -28,6 +28,8 @@ namespace Garage2._0
 
             // builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
 
+            builder.Services.Configure<PrakingPricingOptions>(builder.Configuration.GetSection("PrakingPricing"));
+
             // implementera Auth
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {

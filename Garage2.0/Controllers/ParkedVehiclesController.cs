@@ -20,7 +20,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // GET: PARKEDVEHICLES
     public async Task<IActionResult> Index(string sort, string license, VehicleType? type)
     {
-        IQueryable<ParkedVehicle> vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
+        IQueryable<Vehicle> vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
         // Save search terms to populate html page
         ViewData["license"] = license;
@@ -49,10 +49,18 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
                 vehicles = vehicles.OrderByDescending(v => v.VehicleType);
                 break;
             case "start":
-                vehicles = vehicles.OrderBy(v => v.ArrivalTime);
+                vehicles = vehicles.OrderBy(v => 
+                v.ParkingSessions
+                    .Where(ps => ps.DepartureTime == null)
+                    .Select(ps => ps.ArrivalTime)
+                    .FirstOrDefault());
                 break;
             case "start_d":
-                vehicles = vehicles.OrderByDescending(v => v.ArrivalTime);
+                vehicles = vehicles.OrderByDescending(v => 
+                v.ParkingSessions
+                    .Where(ps => ps.DepartureTime == null)
+                    .Select(ps => ps.ArrivalTime)
+                    .FirstOrDefault());
                 break;
         }
 
@@ -61,7 +69,10 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
             VehicleType = v.VehicleType,
-            ArrivalTime = v.ArrivalTime
+            ArrivalTime = v.ParkingSessions
+                .Where(ps => ps.DepartureTime == null)
+                .Select(ps => (DateTime?)ps.ArrivalTime)
+                .FirstOrDefault(),
 
         }).ToListAsync();
 
@@ -70,7 +81,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         else if (sort == "parked_d")
             viewModel = viewModel.OrderByDescending(v => v.ParkedDuration).ToList();
 
-        return View(viewModel);
+        return View(nameof(Index), viewModel);
     }
 
     //GET: PARKEDVEHICLES/Details/5
@@ -114,9 +125,9 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         }
 
         // Generate newVehicle
-        ParkedVehicle newParkedVehicle = new ParkedVehicle()
+        Vehicle newParkedVehicle = new Vehicle()
         {
-            ArrivalTime = DateTime.Now,
+            //ArrivalTime = DateTime.Now, ToDo (In later task): set ArrivalTime by creating a ParkingSession here once parking flow exists
             RegistrationNumber = model.RegistrationNumber,
             VehicleBrand = model.VehicleBrand,
             VehicleModel = model.VehicleModel,
@@ -130,7 +141,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         {
             _context.Add(newParkedVehicle);
             await _context.SaveChangesAsync();
-            TempData["Success"] = $"Successfully Parked {newParkedVehicle} at {newParkedVehicle.ArrivalTime}";
+            TempData["Success"] = $"Successfully Parked {newParkedVehicle}"; // at {newParkedVehicle.ArrivalTime}";
             return RedirectToAction(nameof(Index));
         }
         ViewData["Error"] = "Error message text.";
@@ -146,7 +157,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     [AcceptVerbs("GET", "POST")]
     public async Task<IActionResult> VerifyRegistrationNumber(string registationNumber)
     {
-        IEnumerable<ParkedVehicle> list = await _context.ParkedVehicle.ToListAsync();
+        IEnumerable<Vehicle> list = await _context.ParkedVehicle.ToListAsync();
         if (list.Any(v => v.RegistrationNumber == registationNumber))
         {
             return Json($"Email {registationNumber} is already in use.");
@@ -175,7 +186,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             OriginalRegistrationNumber = parkedvehicle.RegistrationNumber,
             Color = parkedvehicle.Color ?? "#ffffff",
             VehicleBrand = parkedvehicle.VehicleBrand,
-            ArrivalTime = parkedvehicle.ArrivalTime,
+            //ArrivalTime = parkedvehicle.ArrivalTime, TODO: ArrivalTime removed — no longer belongs on Vehicle, it's on ParkingSession now (can not be edited here)
             VehicleModel = parkedvehicle.VehicleModel,
             VehicleType = parkedvehicle.VehicleType,
             Wheels = parkedvehicle.Wheels,
@@ -204,9 +215,9 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return View(model);
         }
 
-        ParkedVehicle? parkedVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.Id == id);
-        if (parkedVehicle == null) return NotFound();
-
+        Vehicle? parkedVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.Id ==id);
+        if (parkedVehicle == null) return NotFound(); 
+        
         parkedVehicle.RegistrationNumber = model.RegistrationNumber;
         parkedVehicle.VehicleBrand = model.VehicleBrand;
         parkedVehicle.VehicleModel = model.VehicleModel;
@@ -281,7 +292,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             VehicleModel = vehicle.VehicleModel,
             Color = vehicle.Color,
             Wheels = vehicle.Wheels,
-            ArrivalTime = vehicle.ArrivalTime,
+            //ArrivalTime = vehicle.ArrivalTime,  TODO (In Later Task): ArrivalTime/DepartureTime now come from the active ParkingSession, not Vehicle — checkout flow needs rework
             DepartureTime = DateTime.Now
         };
 
