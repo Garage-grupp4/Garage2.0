@@ -7,6 +7,9 @@ namespace Garage2._0.Data;
 public class GarageContext(DbContextOptions<GarageContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Garage2._0.Models.Vehicle> Vehicles { get; set; } = default!;
+    public DbSet<Garage2._0.Models.VehicleType> VehicleTypes { get; set; } = default!;
+    public DbSet<Garage2._0.Models.ParkingSpot> ParkingSpots { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Vehicle>().HasIndex(p => p.RegistrationNumber).IsUnique();
