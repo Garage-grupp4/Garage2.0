@@ -28,23 +28,28 @@ public static class SeedData
         }
 
         Console.WriteLine("→ Tom databas hittad. Seedar testdata...");
-
-        var carType = new VehicleType { Name = "Car" };
-        var motorcycleType = new VehicleType { Name = "Motorcycle" };
-        var busType = new VehicleType { Name = "Bus" };
-        var truckType = new VehicleType { Name = "Truck" };
-
-        db.VehicleTypes.AddRange(carType, motorcycleType, busType, truckType);
-        db.SaveChanges();
-
-        var spots = new List<ParkingSpot>();
-        for (int i = 2; i <= 40; i += 2)
+        if (!db.VehicleTypes.Any())
         {
-            spots.Add(new ParkingSpot { Number = i, Location = "Garage A", isOutOfService = false });
+            var carType = new VehicleType { Name = "Car" };
+            var motorcycleType = new VehicleType { Name = "Motorcycle" };
+            var busType = new VehicleType { Name = "Bus" };
+            var truckType = new VehicleType { Name = "Truck" };
+
+            db.VehicleTypes.AddRange(carType, motorcycleType, busType, truckType);
+            db.SaveChanges();
         }
 
-        db.ParkingSpots.AddRange(spots);    
-        db.SaveChanges();
+        if (!db.ParkingSpots.Any())
+        {
+            var spots = new List<ParkingSpot>();
+            for (int i = 2; i <= 40; i += 2)
+            {
+                spots.Add(new ParkingSpot { Number = i, Location = "Garage A", isOutOfService = false });
+            }
+
+            db.ParkingSpots.AddRange(spots);
+            db.SaveChanges();
+        }
 
         var added = db.SaveChanges();
         Console.WriteLine($"✓ Seed klar — {added} fordon tillagda.");
