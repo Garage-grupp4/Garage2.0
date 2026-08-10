@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Garage2._0.Migrations
 {
     /// <inheritdoc />
-    public partial class AddIdentity : Migration
+    public partial class Innit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,34 @@ namespace Garage2._0.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParkingSpot",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Number = table.Column<int>(type: "INTEGER", nullable: false),
+                    Location = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    isOutOfService = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParkingSpot", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VehicleType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VehicleType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -159,6 +187,60 @@ namespace Garage2._0.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ParkedVehicle",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RegistrationNumber = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
+                    VehicleModel = table.Column<string>(type: "TEXT", nullable: false),
+                    VehicleBrand = table.Column<string>(type: "TEXT", nullable: false),
+                    Color = table.Column<string>(type: "TEXT", nullable: true),
+                    Wheels = table.Column<int>(type: "INTEGER", nullable: false),
+                    VehicleTypeId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParkedVehicle", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParkedVehicle_VehicleType_VehicleTypeId",
+                        column: x => x.VehicleTypeId,
+                        principalTable: "VehicleType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParkingSession",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    VehicleId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ParkingSpotId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ArrivalTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DepartureTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    HourlyRateForParking = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    TotalCost = table.Column<decimal>(type: "decimal(10,2)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParkingSession", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ParkingSession_ParkedVehicle_VehicleId",
+                        column: x => x.VehicleId,
+                        principalTable: "ParkedVehicle",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ParkingSession_ParkingSpot_ParkingSpotId",
+                        column: x => x.ParkingSpotId,
+                        principalTable: "ParkingSpot",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -191,15 +273,42 @@ namespace Garage2._0.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_PersonNumber",
-                table: "AspNetUsers",
-                column: "PersonNumber",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParkedVehicle_RegistrationNumber",
+                table: "ParkedVehicle",
+                column: "RegistrationNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParkedVehicle_VehicleTypeId",
+                table: "ParkedVehicle",
+                column: "VehicleTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParkingSession_ParkingSpotId",
+                table: "ParkingSession",
+                column: "ParkingSpotId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParkingSession_VehicleId",
+                table: "ParkingSession",
+                column: "VehicleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ParkingSpot_Number",
+                table: "ParkingSpot",
+                column: "Number",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleType_Name",
+                table: "VehicleType",
+                column: "Name",
                 unique: true);
         }
 
@@ -222,10 +331,22 @@ namespace Garage2._0.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ParkingSession");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ParkedVehicle");
+
+            migrationBuilder.DropTable(
+                name: "ParkingSpot");
+
+            migrationBuilder.DropTable(
+                name: "VehicleType");
         }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Garage2._0.Models;
 
-public class ParkedVehicle
+public class Vehicle
 {
 
     public int Id { get; set; }
@@ -12,28 +12,26 @@ public class ParkedVehicle
     [Display(Name = "Registration Number")]
     public required string RegistrationNumber { get; set; } //Custom validation
 
-    [Display(Name = "Arrival Time")]
-    [DisplayFormat(DataFormatString = "{0:yy-MM-dd HH:mm}")]
-    public required DateTime ArrivalTime { get; set; }
-
-    [Display(Name = "Vehicle Type")]
-    public required VehicleType VehicleType { get; set; }
-
     [Display(Name = "Model")]
     public required string VehicleModel { get; set; }
 
     [Display(Name = "Brand")]
     public required string VehicleBrand { get; set; }
 
-    public DateTime? DepartureTime { get; set; }
-
     public string? Color { get; set; }
 
     [Range(0, 64)]
     public required int Wheels { get; set; }
+    public int VehicleTypeId { get; set; }
 
     public override string ToString()
     {
         return $"{VehicleType} {RegistrationNumber}";
     }
+
+    [Display(Name = "Vehicle Type")]
+    public required VehicleType VehicleType { get; set; }
+
+
+    public ICollection<ParkingSession> ParkingSessions { get; set; } = new List<ParkingSession>();
 }
