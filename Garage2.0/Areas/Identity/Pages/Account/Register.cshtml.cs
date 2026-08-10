@@ -99,6 +99,22 @@ namespace Garage2._0.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            // Custom fields
+            [Required]
+            [Display(Name = "Förnamn")]
+            public string FirstName { get; set; } = string.Empty;
+
+            [Required]
+            [Display(Name = "Efternamn")]
+            public string LastName { get; set; } = string.Empty;
+
+            [Required]
+            [RegularExpression(@"^\d{8}-\d{4}$",
+              ErrorMessage = "Personnummer måste ha formatet YYYYMMDD-XXXX")]
+            [StringLength(13, MinimumLength = 13)]
+            [Display(Name = "Personnummer")]
+            public string PersonNumber { get; set; } = string.Empty;
         }
 
 
@@ -115,6 +131,12 @@ namespace Garage2._0.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+                // Custom fields
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.PersonNumber = Input.PersonNumber;
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);

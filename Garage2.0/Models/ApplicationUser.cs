@@ -15,9 +15,11 @@ public class ApplicationUser : IdentityUser
     [Display(Name = "Efternamn")]
     public string LastName { get; set; } = string.Empty;
 
-    // TODO(#39): Custom validation för PersonNumber-format (YYYYMMDD-XXXX)
-    // TODO(#40): Unikt index på PersonNumber i DbContextalidation
     [Required]
+    [RegularExpression(
+        @"^\d{8}-\d{4}$",
+        ErrorMessage = "Personnummer måste ha formatet YYYYMMDD-XXXX"
+        )]
     [StringLength(13, MinimumLength = 13)]
     [Display(Name = "Personnummer")]
     public string PersonNumber { get; set; } = string.Empty;
