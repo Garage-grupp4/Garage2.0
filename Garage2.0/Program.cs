@@ -9,7 +9,7 @@ namespace Garage2._0
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             var connectionString =
@@ -63,7 +63,7 @@ namespace Garage2._0
             using (var scope = app.Services.CreateScope()) // öppna scope
             {
                 var db = scope.ServiceProvider.GetRequiredService<GarageContext>(); // hämta DbContext
-                SeedData.Initialize(db); // gör jobbet
+                await SeedData.Initialize(db,scope.ServiceProvider); // gör jobbet
             } // scope stängs, db disposas
 
             // Configure the HTTP request pipeline.

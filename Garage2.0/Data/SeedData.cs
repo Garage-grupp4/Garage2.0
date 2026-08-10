@@ -1,15 +1,25 @@
+using Garage2._0.Constants;
 using Garage2._0.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Garage2._0.Data;
 
 public static class SeedData
 {
-    public static void Initialize(GarageContext db)
+    public static async Task Initialize(GarageContext db, IServiceProvider services)
     {
         Console.WriteLine("→ Kontrollerar databasen...");
         db.Database.Migrate();
 
+        if (!db.Roles.Any())
+        {
+            var _roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            await SeedRoles(db,_roleManager);
+            await SeedAdminUser(db, _userManager);
+        }
+        
         if (db.Vehicles.Any())
         {
             var count = db.Vehicles.Count();
@@ -38,5 +48,57 @@ public static class SeedData
 
         var added = db.SaveChanges();
         Console.WriteLine($"✓ Seed klar — {added} fordon tillagda.");
+    }
+
+    private static async Task SeedRoles(GarageContext db, RoleManager<IdentityRole> roleManager)
+    {
+
+        var roles = new[] { Roles.ADMIN, Roles.MEMBER };
+        foreach (string roleName in roles)
+        {
+            if (await roleManager.RoleExistsAsync(roleName)) continue;
+
+            var role = new IdentityRole { Name = roleName };
+
+            var result = await roleManager.CreateAsync(role);
+
+            if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors)); 
+        }
+    }
+
+    private static async Task SeedAdminUser(GarageContext db,UserManager<ApplicationUser> userManager)
+    {
+        var admin = await AddAccountAsync(userManager, 
+            "admin@admin.com", 
+            "adminuser",
+            "Adminsson", 
+            "password1!");
+
+        await userManager.AddToRoleAsync(admin, Roles.ADMIN);
+    }
+    
+    
+    private static async Task<ApplicationUser> AddAccountAsync(UserManager<ApplicationUser> userManager,string accountEmail, string fName, string lName, string pw)
+    {
+        var found = await userManager.FindByEmailAsync(accountEmail);
+
+        // Returns if exists, maybe give warning in the future instead
+        if (found != null) return found; 
+
+        ApplicationUser user = new ApplicationUser
+        {
+            UserName = accountEmail,
+            Email = accountEmail,
+            FirstName = fName,
+            LastName = lName,
+            PersonNumber = "111111111-1111",
+            EmailConfirmed = true
+        };
+        
+        var result = await userManager.CreateAsync(user, pw);
+
+        if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
+
+        return user; 
     }
 }
