@@ -10,9 +10,9 @@ public static class SeedData
         Console.WriteLine("→ Kontrollerar databasen...");
         db.Database.Migrate();
 
-        if (db.ParkedVehicle.Any())
+        if (db.Vehicles.Any())
         {
-            var count = db.ParkedVehicle.Count();
+            var count = db.Vehicles.Count();
             Console.WriteLine($"✓ Databasen innehåller redan {count} fordon — hoppar över seed.");
             return;
         }
