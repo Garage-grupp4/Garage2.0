@@ -1,7 +1,7 @@
 @using Garage2._0.Constants
 @model IEnumerable<ApplicationUserViewModel>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Admin Users Page";
 }
 
 <div class="page-header">
@@ -40,8 +40,9 @@
                     <td>@item.LastName</td>
                     <td>@item.PersonNumber</td>
                     <td class="text-end">
-                        <form asp-action="AdminToggle" asp-route-email="@item.Email" method="post">
+                        <form asp-action="AdminToggle" method="post">
                             @Html.AntiForgeryToken()
+                            <input type="hidden" name="email" value="@item.Email" />
                             <button type="submit" class="btn btn-sm @(item.Role == Roles.ADMIN ? "btn-danger" : "btn-warning") w-100">
                                 @(item.Role == Roles.ADMIN ? "Remove as Admin" : "Set as Admin")
                             </button>

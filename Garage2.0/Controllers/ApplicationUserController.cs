@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Garage2._0.Controllers;
 
+[Authorize(Roles = Roles.ADMIN)]
 public class ApplicationUserController : Controller
 {
     private UserManager<ApplicationUser> _userManager;
@@ -30,25 +31,25 @@ public class ApplicationUserController : Controller
     {
         var users = new List<ApplicationUserViewModel>();
 
-        await _userManager.Users.ForEachAsync<ApplicationUser>(async (ApplicationUser u) =>
+        var applicationUsers = await _userManager.Users.ToListAsync();
+        foreach (var u in applicationUsers)
         {
             var result = await _userManager.GetRolesAsync(u);
             var role = result.FirstOrDefault();
-            
-            users.Add(new ApplicationUserViewModel()
-            {
+            users.Add(new ApplicationUserViewModel             {
                 Email = u.Email,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 PersonNumber = u.PersonNumber,
                 Role = role
             });
-            
-        });
+        }
+        
         return users;
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AdminToggle(string? email)
     {
         var user = _userManager.Users.FirstOrDefault(u => u.Email == email);
@@ -56,10 +57,12 @@ public class ApplicationUserController : Controller
         var result = await _userManager.GetRolesAsync(user);
         bool isAdmin = result.Contains(Roles.ADMIN);
         
-        await _userManager.RemoveFromRoleAsync(user, isAdmin ?  Roles.ADMIN : Roles.MEMBER);
-        await _userManager.AddToRoleAsync(user, isAdmin ?  Roles.MEMBER : Roles.ADMIN);
+        var newRole = isAdmin ? Roles.MEMBER : Roles.ADMIN;
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+        await _userManager.AddToRoleAsync(user, newRole);
         
         var users = await GetUserViewModels();
-        return View(nameof(Index),users);
+        return RedirectToAction(nameof(Index));
     }
 }

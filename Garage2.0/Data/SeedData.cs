@@ -167,7 +167,8 @@ public static class SeedData
     {
         var found = await userManager.FindByEmailAsync(accountEmail);
 
-        if (found != null) return null!;
+        // Returns if exists, maybe give warning in the future instead
+        if (found != null) return found; 
 
         ApplicationUser user = new ApplicationUser
         {
@@ -175,7 +176,7 @@ public static class SeedData
             Email = accountEmail,
             FirstName = fName,
             LastName = lName,
-            PersonNumber = "1111111111111",
+            PersonNumber = "111111111-1111",
             EmailConfirmed = true
         };
         
