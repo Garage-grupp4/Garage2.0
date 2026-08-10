@@ -20,7 +20,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // GET: PARKEDVEHICLES
     public async Task<IActionResult> Index(string sort, string license, VehicleType? type)
     {
-        IQueryable<Vehicle> vehicles = _context.ParkedVehicle; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
+        IQueryable<Vehicle> vehicles = _context.Vehicles; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
         // Save search terms to populate html page
         ViewData["license"] = license;
@@ -92,7 +92,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return NotFound();
         }
 
-        var parkedvehicle = await _context.ParkedVehicle
+        var parkedvehicle = await _context.Vehicles
             .FirstOrDefaultAsync(m => m.Id == id);
         if (parkedvehicle == null)
         {
@@ -150,14 +150,14 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
 
     private async Task<bool> IsRegistrationNumberUnique(string registrationNumber)
     {
-        return !await _context.ParkedVehicle
+        return !await _context.Vehicles
             .AnyAsync(v => v.RegistrationNumber == registrationNumber);
     }
 
     [AcceptVerbs("GET", "POST")]
     public async Task<IActionResult> VerifyRegistrationNumber(string registationNumber)
     {
-        IEnumerable<Vehicle> list = await _context.ParkedVehicle.ToListAsync();
+        IEnumerable<Vehicle> list = await _context.Vehicles.ToListAsync();
         if (list.Any(v => v.RegistrationNumber == registationNumber))
         {
             return Json($"Email {registationNumber} is already in use.");
@@ -173,7 +173,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return NotFound();
         }
 
-        var parkedvehicle = await _context.ParkedVehicle.FindAsync(id);
+        var parkedvehicle = await _context.Vehicles.FindAsync(id);
         if (parkedvehicle == null)
         {
             return NotFound();
@@ -215,7 +215,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return View(model);
         }
 
-        Vehicle? parkedVehicle = _context.ParkedVehicle.FirstOrDefault(p => p.Id ==id);
+        Vehicle? parkedVehicle = _context.Vehicles.FirstOrDefault(p => p.Id ==id);
         if (parkedVehicle == null) return NotFound(); 
         
         parkedVehicle.RegistrationNumber = model.RegistrationNumber;
@@ -260,7 +260,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return NotFound();
         }
 
-        var vehicle = await _context.ParkedVehicle
+        var vehicle = await _context.Vehicles
             .FirstOrDefaultAsync(m => m.Id == id);
 
         if (vehicle == null)
@@ -276,7 +276,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
-        var vehicle = await _context.ParkedVehicle.FindAsync(id);
+        var vehicle = await _context.Vehicles.FindAsync(id);
 
         if (vehicle == null)
         {
@@ -296,7 +296,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             DepartureTime = DateTime.Now
         };
 
-        _context.ParkedVehicle.Remove(vehicle);
+        _context.Vehicles.Remove(vehicle);
         await _context.SaveChangesAsync();
         TempData["Success"] = $"Successfully check out {vehicle} ";
         return View("Receipt", receipt);
@@ -304,7 +304,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
 
     private bool ParkedVehicleExists(int? id)
     {
-        return _context.ParkedVehicle.Any(e => e.Id == id);
+        return _context.Vehicles.Any(e => e.Id == id);
     }
 
 }
