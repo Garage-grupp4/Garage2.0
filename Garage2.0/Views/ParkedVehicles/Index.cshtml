@@ -5,9 +5,10 @@
 }
 
 <div class="page-header">
-    <h1>Vehicles</h1>
+    <h1>Parked Vehicles</h1>
     <hr />
 </div>
+
 
 <form asp-action="Index" method="get" class="mb-4">
     <div class="row g-3 align-items-end">
@@ -19,17 +20,17 @@
             <label class="form-label">Vehicle Type</label>
             <select class="form-select" name="type">
                 <option value=""></option>
-                @foreach (var type in (string[])(ViewData["vehicletypes"] ?? new string[] {"Vehicle Types Data Missing"}))
+                @* @foreach (var type in Html.GetEnumSelectList<VehicleType>())
                 {
-                    if (ViewData["type"]?.ToString() == type)
+                    if (ViewData["type"]?.ToString() == type.Text)
                     {
-                        <option value="@type" selected>@type</option>
+                        <option value="@type.Value" selected>@type.Text</option>
                     }
                     else
                     {
-                        <option value="@type">@type</option>
+                        <option value="@type.Value">@type.Text</option>
                     }
-                }
+                } *@
             </select>
         </div>
         <div class="col-md-4">

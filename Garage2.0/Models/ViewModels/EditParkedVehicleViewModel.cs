@@ -17,7 +17,7 @@ public class EditParkedVehicleViewModel
     public DateTime ArrivalTime { get; init; } //delete arrival time and work with 
 
     [Display(Name = "Type")]
-    public required int VehicleTypeId { get; set; }
+    public required VehicleType VehicleType { get; set; }
 
     [StringLength(20, ErrorMessage = "Name length can't be more than 20.")]
     [Display(Name = "Model")]

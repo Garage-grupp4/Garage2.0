@@ -163,9 +163,6 @@ namespace Garage2._0.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -186,8 +183,6 @@ namespace Garage2._0.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.HasIndex("RegistrationNumber")
                         .IsUnique();
@@ -364,18 +359,11 @@ namespace Garage2._0.Migrations
 
             modelBuilder.Entity("Garage2._0.Models.Vehicle", b =>
                 {
-                    b.HasOne("Garage2._0.Models.ApplicationUser", "Owner")
-                        .WithMany("Vehicles")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Garage2._0.Models.VehicleType", "VehicleType")
                         .WithMany("Vehicles")
                         .HasForeignKey("VehicleTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Owner");
 
                     b.Navigation("VehicleType");
                 });
@@ -429,11 +417,6 @@ namespace Garage2._0.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Garage2._0.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("Garage2._0.Models.ParkingSpot", b =>
