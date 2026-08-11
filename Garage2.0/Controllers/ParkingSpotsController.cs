@@ -9,6 +9,7 @@ using Garage2._0.Data;
 using Garage2._0.Models;
 using Microsoft.AspNetCore.Authorization;
 using Garage2._0.Constants;
+using Garage2._0.Models.ViewModels;
 
 namespace Garage2._0.Controllers
 {
@@ -25,7 +26,18 @@ namespace Garage2._0.Controllers
         // GET: ParkingSpots
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ParkingSpots.ToListAsync());
+            var spots = await _context.ParkingSpots
+                .Select(ps => new ParkingSpotViewModel
+                {
+                    Id = ps.Id,
+                    Number = ps.Number,
+                    Location = ps.Location,
+                    Status = ps.IsOutOfService ? "Out of Service" : ps.ParkingSessions
+                        .Any(session => session.DepartureTime == null)
+                        ? "Occupied" : "Available"
+                }
+                        ).ToListAsync();
+            return View(spots);
         }
 
         // GET: ParkingSpots/Details/5
