@@ -1,4 +1,4 @@
-@model IEnumerable<Garage2._0.Models.ParkingSpot>
+@model IEnumerable<Garage2._0.Models.ViewModels.ParkingSpotViewModel>
 
 @{
     ViewData["Title"] = "Parking Spots";
@@ -35,7 +35,7 @@
                 @Html.DisplayNameFor(model => model.Location)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsOutOfService)
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th></th>
         </tr>
@@ -51,13 +51,17 @@
                     @Html.DisplayFor(modelItem => item.Location)
                 </td>
                 <td>
-                    @if (item.IsOutOfService)
+                    @switch (item.Status)
                     {
-                        <span class="badge bg-warning text-dark">Out of Service</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-success">Active</span>
+                        case "Available":
+                            <span class="badge bg-success">Available</span>
+                            break;
+                        case "Occupied":
+                            <span class="badge bg-danger">Occupied</span>
+                            break;
+                        case "Out of Service":
+                            <span class="badge bg-warning text-dark">Out of Service</span>
+                            break;
                     }
                 </td>
                 <td>
