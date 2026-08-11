@@ -26,6 +26,7 @@ namespace Garage2._0
                     opt.UseSqlite(connectionString);
             });
 
+
             // builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
 
             builder.Services.Configure<PrakingPricingOptions>(builder.Configuration.GetSection("PrakingPricing"));
@@ -63,7 +64,7 @@ namespace Garage2._0
             using (var scope = app.Services.CreateScope()) // öppna scope
             {
                 var db = scope.ServiceProvider.GetRequiredService<GarageContext>(); // hämta DbContext
-                //await SeedData.Initialize(db,scope.ServiceProvider); // gör jobbet
+                await SeedData.Initialize(db, scope.ServiceProvider); // gör jobbet
             } // scope stängs, db disposas
 
             // Configure the HTTP request pipeline.
