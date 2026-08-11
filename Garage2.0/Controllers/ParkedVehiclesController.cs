@@ -330,7 +330,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     private bool IsAdmin()
     {
         var user = GetApplicationUser();
-        return user.PersonNumber != "111111111-1111"; // TODO: change to role based check
+        return user.PersonNumber == "111111111-1111"; // TODO: change to role based check
     }
     private bool IsAuthorized(Vehicle vehicle)
     {
