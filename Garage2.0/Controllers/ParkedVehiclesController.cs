@@ -18,10 +18,15 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     }
 
     // GET: PARKEDVEHICLES
-    public async Task<IActionResult> Index(string sort, string license, VehicleType? type)
+    public async Task<IActionResult> Index(string sort, string license, string type)
     {
         IQueryable<Vehicle> vehicles = _context.Vehicles; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
+        var user = GetUser();
+        if (user.PersonNumber != "111111111-1111")
+            vehicles = vehicles.Where(v => (v.OwnerId ?? "") == user.Id);
+
+        ViewData["vehicletypes"] = _context.VehicleTypes.Select(t => t.Name).ToArray();
         // Save search terms to populate html page
         ViewData["license"] = license;
         ViewData["type"] = type;
@@ -30,8 +35,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         // Filter with search terms
         if (!string.IsNullOrEmpty(license))
             vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().StartsWith(license.ToUpper())); // changed to startwith to make it more user friendly kanske använda Equals instead of ToUpper() for exact match, but then it would be case sensitive. Could use ToLower() instead of ToUpper() for case insensitive match.
-        if (type != null)
-            vehicles = vehicles.Where(v => v.VehicleType == type);
+        if (!string.IsNullOrEmpty(type))
+            vehicles = vehicles.Where(v => v.VehicleType.Name == type);
 
         // Sort by Vehicle Type, Registration number, Arrival time, Time Parked
         switch (sort)
@@ -68,7 +73,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         {
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
-            VehicleType = v.VehicleType,
+            VehicleType = v.VehicleType.Name,
             ArrivalTime = v.ParkingSessions
                 .Where(ps => ps.DepartureTime == null)
                 .Select(ps => (DateTime?)ps.ArrivalTime)
@@ -88,16 +93,14 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     public async Task<IActionResult> Details(int? id) //kan göra lite snyggare här
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
         var parkedvehicle = await _context.Vehicles
+            .Include(v => v.Owner)
+            .Include(v => v.VehicleType)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (parkedvehicle == null)
-        {
             return NotFound();
-        }
 
         return View(parkedvehicle);
     }
@@ -105,6 +108,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // GET: PARKEDVEHICLES/Create
     public IActionResult Create()
     {
+        ViewData["vehicletypes"] = _context.VehicleTypes.ToArray();
         return View();
     }
 
@@ -125,15 +129,18 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         }
 
         // Generate newVehicle
+        ApplicationUser user = GetUser();
         Vehicle newParkedVehicle = new Vehicle()
         {
             //ArrivalTime = DateTime.Now, ToDo (In later task): set ArrivalTime by creating a ParkingSession here once parking flow exists
             RegistrationNumber = model.RegistrationNumber,
             VehicleBrand = model.VehicleBrand,
             VehicleModel = model.VehicleModel,
-            VehicleType = model.VehicleType,
+            VehicleType = _context.VehicleTypes.First(t => t.Id == model.VehicleTypeId),
             Color = model.Color,
-            Wheels = model.Wheels
+            Wheels = model.Wheels,
+            OwnerId = user.Id,
+            Owner = user
         };
 
         // Send to Database
@@ -307,4 +314,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         return _context.Vehicles.Any(e => e.Id == id);
     }
 
+    private ApplicationUser GetUser()
+    {
+        return _context.Users.First(u => u.UserName == (User.Identity != null ? User.Identity.Name : ""));
+    }
 }
