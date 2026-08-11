@@ -4,6 +4,7 @@ using Garage2._0.Models;
 using Garage2._0.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Garage2._0.Controllers;
 
@@ -11,10 +12,12 @@ namespace Garage2._0.Controllers;
 public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
 {
     private readonly GarageContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ParkedVehiclesController(GarageContext context)
+    public ParkedVehiclesController(GarageContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     // GET: PARKEDVEHICLES
@@ -128,6 +131,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         Vehicle newParkedVehicle = new Vehicle()
         {
             //ArrivalTime = DateTime.Now, ToDo (In later task): set ArrivalTime by creating a ParkingSession here once parking flow exists
+            ApplicationUserId = _userManager.GetUserId(User),
             RegistrationNumber = model.RegistrationNumber,
             VehicleBrand = model.VehicleBrand,
             VehicleModel = model.VehicleModel,
@@ -152,6 +156,14 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     {
         return !await _context.Vehicles
             .AnyAsync(v => v.RegistrationNumber == registrationNumber);
+    }
+
+    private async Task<List<Vehicle>> GetAvailableVehiclesForUser(string userId) 
+    {
+        return await _context.Vehicles
+            .Where(v => v.ApplicationUserId == userId)
+            .Where(v => !v.ParkingSessions.Any(ps => ps.DepartureTime == null)) // Only include vehicles that are not currently parked
+            .ToListAsync();
     }
 
     [AcceptVerbs("GET", "POST")]

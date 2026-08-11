@@ -23,4 +23,7 @@ public class ApplicationUser : IdentityUser
     [StringLength(13, MinimumLength = 13)]
     [Display(Name = "Personnummer")]
     public string PersonNumber { get; set; } = string.Empty;
+
+
+   public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
 }

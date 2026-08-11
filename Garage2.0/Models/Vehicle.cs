@@ -24,6 +24,9 @@ public class Vehicle
     public required int Wheels { get; set; }
     public int VehicleTypeId { get; set; }
 
+    public required string ApplicationUserId { get; set; }
+    public ApplicationUser ApplicationUser { get; set; } = null!;
+
     public override string ToString()
     {
         return $"{VehicleType} {RegistrationNumber}";
