@@ -23,7 +23,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         IQueryable<Vehicle> vehicles = _context.Vehicles; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
         var user = GetApplicationUser();
-        if (user.PersonNumber != "111111111-1111") // TODO: change to role based check
+        if (!IsAdmin())
             vehicles = vehicles.Where(v => (v.OwnerId ?? "") == user.Id);
 
         ViewData["vehicletypes"] = _context.VehicleTypes.Select(t => t.Name).ToArray();
@@ -101,6 +101,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             .FirstOrDefaultAsync(m => m.Id == id);
         if (parkedvehicle == null)
             return NotFound();
+        if (!IsAuthorized(parkedvehicle))
+            return Unauthorized();
 
         return View(parkedvehicle);
     }
@@ -187,6 +189,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         {
             return NotFound();
         }
+        if (!IsAuthorized(parkedvehicle))
+            return Unauthorized();
 
         var parkedvehicleModel = new EditParkedVehicleViewModel()
         {
@@ -225,8 +229,9 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         }
 
         Vehicle? parkedVehicle = _context.Vehicles.FirstOrDefault(p => p.Id ==id);
-        if (parkedVehicle == null) return NotFound(); 
-        
+        if (parkedVehicle == null) return NotFound();
+        if (!IsAuthorized(parkedVehicle)) return Unauthorized();
+
         parkedVehicle.RegistrationNumber = NormalizeRegistrationNumber(model.RegistrationNumber);
         parkedVehicle.VehicleBrand = model.VehicleBrand;
         parkedVehicle.VehicleModel = model.VehicleModel;
@@ -287,10 +292,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     {
         var vehicle = await _context.Vehicles.FindAsync(id);
 
-        if (vehicle == null)
-        {
-            return NotFound();
-        }
+        if (vehicle == null) return NotFound();
+        if (!IsAuthorized(vehicle)) return Unauthorized();
 
         var receipt = new ReceiptViewModel
         {
@@ -323,5 +326,14 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     private static string NormalizeRegistrationNumber(string registrationNumber)
     {
         return registrationNumber.Trim().ToUpper();
+    }
+    private bool IsAdmin()
+    {
+        var user = GetApplicationUser();
+        return user.PersonNumber != "111111111-1111"; // TODO: change to role based check
+    }
+    private bool IsAuthorized(Vehicle vehicle)
+    {
+        return IsAdmin() || vehicle.OwnerId == GetApplicationUser().Id;
     }
 }
