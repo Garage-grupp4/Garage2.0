@@ -18,10 +18,15 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     }
 
     // GET: PARKEDVEHICLES
-    public async Task<IActionResult> Index(string sort, string license, VehicleType? type)
+    public async Task<IActionResult> Index(string sort, string license, string type)
     {
         IQueryable<Vehicle> vehicles = _context.Vehicles; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
+        var user = GetApplicationUser();
+        if (!IsAdmin())
+            vehicles = vehicles.Where(v => (v.OwnerId ?? "") == user.Id);
+
+        ViewData["vehicletypes"] = _context.VehicleTypes.Select(t => t.Name).ToArray();
         // Save search terms to populate html page
         ViewData["license"] = license;
         ViewData["type"] = type;
@@ -30,8 +35,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         // Filter with search terms
         if (!string.IsNullOrEmpty(license))
             vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().StartsWith(license.ToUpper())); // changed to startwith to make it more user friendly kanske använda Equals instead of ToUpper() for exact match, but then it would be case sensitive. Could use ToLower() instead of ToUpper() for case insensitive match.
-        if (type != null)
-            vehicles = vehicles.Where(v => v.VehicleType == type);
+        if (!string.IsNullOrEmpty(type))
+            vehicles = vehicles.Where(v => v.VehicleType.Name == type);
 
         // Sort by Vehicle Type, Registration number, Arrival time, Time Parked
         switch (sort)
@@ -68,7 +73,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         {
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
-            VehicleType = v.VehicleType,
+            VehicleType = v.VehicleType.Name,
             ArrivalTime = v.ParkingSessions
                 .Where(ps => ps.DepartureTime == null)
                 .Select(ps => (DateTime?)ps.ArrivalTime)
@@ -88,16 +93,16 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     public async Task<IActionResult> Details(int? id) //kan göra lite snyggare här
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
         var parkedvehicle = await _context.Vehicles
+            .Include(v => v.Owner)
+            .Include(v => v.VehicleType)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (parkedvehicle == null)
-        {
             return NotFound();
-        }
+        if (!IsAuthorized(parkedvehicle))
+            return Unauthorized();
 
         return View(parkedvehicle);
     }
@@ -105,6 +110,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // GET: PARKEDVEHICLES/Create
     public IActionResult Create()
     {
+        ViewData["vehicletypes"] = _context.VehicleTypes.ToArray();
         return View();
     }
 
@@ -125,15 +131,18 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         }
 
         // Generate newVehicle
+        ApplicationUser user = GetApplicationUser();
         Vehicle newParkedVehicle = new Vehicle()
         {
             //ArrivalTime = DateTime.Now, ToDo (In later task): set ArrivalTime by creating a ParkingSession here once parking flow exists
-            RegistrationNumber = model.RegistrationNumber,
+            RegistrationNumber = NormalizeRegistrationNumber(model.RegistrationNumber),
             VehicleBrand = model.VehicleBrand,
             VehicleModel = model.VehicleModel,
-            VehicleType = model.VehicleType,
+            VehicleType = _context.VehicleTypes.First(t => t.Id == model.VehicleTypeId),
             Color = model.Color,
-            Wheels = model.Wheels
+            Wheels = model.Wheels,
+            OwnerId = user.Id,
+            Owner = user
         };
 
         // Send to Database
@@ -173,11 +182,15 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return NotFound();
         }
 
-        var parkedvehicle = await _context.Vehicles.FindAsync(id);
+        var parkedvehicle = await _context.Vehicles
+            .Include(v => v.VehicleType)
+            .FirstOrDefaultAsync(v => v.Id == id);
         if (parkedvehicle == null)
         {
             return NotFound();
         }
+        if (!IsAuthorized(parkedvehicle))
+            return Unauthorized();
 
         var parkedvehicleModel = new EditParkedVehicleViewModel()
         {
@@ -188,7 +201,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             VehicleBrand = parkedvehicle.VehicleBrand,
             //ArrivalTime = parkedvehicle.ArrivalTime, TODO: ArrivalTime removed — no longer belongs on Vehicle, it's on ParkingSession now (can not be edited here)
             VehicleModel = parkedvehicle.VehicleModel,
-            VehicleType = parkedvehicle.VehicleType,
+            VehicleTypeId = parkedvehicle.VehicleType.Id,
             Wheels = parkedvehicle.Wheels,
         };
         return View(parkedvehicleModel);
@@ -216,12 +229,13 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         }
 
         Vehicle? parkedVehicle = _context.Vehicles.FirstOrDefault(p => p.Id ==id);
-        if (parkedVehicle == null) return NotFound(); 
-        
-        parkedVehicle.RegistrationNumber = model.RegistrationNumber;
+        if (parkedVehicle == null) return NotFound();
+        if (!IsAuthorized(parkedVehicle)) return Unauthorized();
+
+        parkedVehicle.RegistrationNumber = NormalizeRegistrationNumber(model.RegistrationNumber);
         parkedVehicle.VehicleBrand = model.VehicleBrand;
         parkedVehicle.VehicleModel = model.VehicleModel;
-        parkedVehicle.VehicleType = model.VehicleType;
+        parkedVehicle.VehicleType = _context.VehicleTypes.FirstOrDefault(t => t.Id == model.VehicleTypeId);
         parkedVehicle.Color = model.Color;
         parkedVehicle.Wheels = model.Wheels;
 
@@ -249,7 +263,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return RedirectToAction(nameof(Index));
         }
 
-        return View(parkedVehicle);
+        return View(model);
     }
 
     // GET: PARKEDVEHICLES/Delete/5
@@ -278,10 +292,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     {
         var vehicle = await _context.Vehicles.FindAsync(id);
 
-        if (vehicle == null)
-        {
-            return NotFound();
-        }
+        if (vehicle == null) return NotFound();
+        if (!IsAuthorized(vehicle)) return Unauthorized();
 
         var receipt = new ReceiptViewModel
         {
@@ -307,4 +319,21 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         return _context.Vehicles.Any(e => e.Id == id);
     }
 
+    private ApplicationUser GetApplicationUser()
+    {
+        return _context.Users.First(u => u.UserName == (User.Identity != null ? User.Identity.Name : ""));
+    }
+    private static string NormalizeRegistrationNumber(string registrationNumber)
+    {
+        return registrationNumber.Trim().ToUpper();
+    }
+    private bool IsAdmin()
+    {
+        var user = GetApplicationUser();
+        return user.PersonNumber == "111111111-1111"; // TODO: change to role based check
+    }
+    private bool IsAuthorized(Vehicle vehicle)
+    {
+        return IsAdmin() || vehicle.OwnerId == GetApplicationUser().Id;
+    }
 }
