@@ -176,5 +176,23 @@ namespace Garage2._0.Controllers
         {
             return _context.ParkingSpots.Any(e => e.Id == id);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleService(int id)
+        {
+            var parkingSpot = await _context.ParkingSpots.FindAsync(id);
+
+            if (parkingSpot is null) return NotFound();
+
+            parkingSpot.IsOutOfService = !parkingSpot.IsOutOfService;
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = parkingSpot.IsOutOfService
+                ? $"Spot {parkingSpot.Number} marked as Out of Service."
+                : $"Spot {parkingSpot.Number} marked as Active.";
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -1,11 +1,8 @@
 @model IEnumerable<Garage2._0.Models.ViewModels.ParkingSpotViewModel>
-
 @{
     ViewData["Title"] = "Parking Spots";
 }
-
 <h1>@ViewData["Title"]</h1>
-
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -13,7 +10,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-
 @if (TempData["Error"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -21,7 +17,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
@@ -67,7 +62,18 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                    <form asp-action="ToggleService" asp-route-id="@item.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        @if (item.Status == "Out of Service")
+                        {
+                            <button type="submit" class="btn btn-link btn-sm p-0 text-success">Mark Active</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-link btn-sm p-0 text-warning">Mark Out of Service</button>
+                        }
+                    </form>
                 </td>
             </tr>
         }

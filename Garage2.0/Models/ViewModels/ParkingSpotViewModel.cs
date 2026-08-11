@@ -12,9 +12,6 @@ public class ParkingSpotViewModel
     [Display(Name = "Location")]
     public required string Location { get; set; }
 
-    [Display(Name = "Out of Service")]
-    public bool IsOutOfService { get; set; }
-
     [Display(Name = "Status")]
     public required string Status { get; set; }
 }
