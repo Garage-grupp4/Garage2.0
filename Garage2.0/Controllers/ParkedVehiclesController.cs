@@ -1,3 +1,4 @@
+using Garage2._0.Constants;
 using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models;
@@ -19,7 +20,11 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     private readonly IVehicleDropDownService vehicleDropDownService;
     private readonly IOptions<ParkingPricingOptions> _pricingOptions;
 
-    public ParkedVehiclesController(GarageContext context, UserManager<ApplicationUser> userManager, IVehicleDropDownService vehicleDropDownService, IOptions<ParkingPricingOptions> pricingOptions)
+    public ParkedVehiclesController(
+        GarageContext context, 
+        UserManager<ApplicationUser> userManager, 
+        IVehicleDropDownService vehicleDropDownService, 
+        IOptions<ParkingPricingOptions> pricingOptions)
     {
         _context = context;
         _userManager = userManager;
@@ -418,8 +423,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     }
     private bool IsAdmin()
     {
-        var user = GetApplicationUser();
-        return user.PersonNumber == "111111111-1111"; // TODO: change to role based check
+        var roles = _userManager.GetRolesAsync(GetApplicationUser()).Result;
+        return roles.Contains(Roles.ADMIN); 
     }
     private bool IsAuthorized(Vehicle vehicle)
     {
