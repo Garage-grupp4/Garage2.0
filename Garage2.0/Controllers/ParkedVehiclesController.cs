@@ -34,7 +34,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
 
         var user = GetApplicationUser();
         if (!IsAdmin())
-            vehicles = vehicles.Where(v => (v.OwnerId ?? "") == user.Id);
+            vehicles = vehicles.Where(v => (v.ApplicationUserId ?? "") == user.Id);
 
         ViewData["vehicletypes"] = _context.VehicleTypes.Select(t => t.Name).ToArray();
         // Save search terms to populate html page
@@ -106,7 +106,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             return NotFound();
 
         var parkedvehicle = await _context.Vehicles
-            .Include(v => v.Owner)
+            .Include(v => v.ApplicationUser)
             .Include(v => v.VehicleType)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (parkedvehicle == null)
@@ -423,6 +423,6 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     }
     private bool IsAuthorized(Vehicle vehicle)
     {
-        return IsAdmin() || vehicle.OwnerId == GetApplicationUser().Id;
+        return IsAdmin() || vehicle.ApplicationUserId == GetApplicationUser().Id;
     }
 }

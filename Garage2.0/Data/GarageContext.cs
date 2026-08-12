@@ -43,9 +43,9 @@ public class GarageContext(DbContextOptions<GarageContext> options) : IdentityDb
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Vehicle>()
-                    .HasOne(v => v.Owner)
+                    .HasOne(v => v.ApplicationUser)
                     .WithMany(u => u.Vehicles)
-                    .HasForeignKey(v => v.OwnerId)
+                    .HasForeignKey(v => v.ApplicationUserId)
                     .IsRequired(false)
                     .OnDelete(DeleteBehavior.Restrict);
         

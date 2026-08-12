@@ -22,10 +22,10 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="VehicleTypeId" class="form-label">Vehicle Type</label>
+            <label asp-for="VehicleTypeId" class="form-label">Vehicle</label>
             <select asp-for="VehicleTypeId" class="form-select"
                 asp-items="@await dropdownService.GetVehicleTypesAsync()">
-                <option value="">-- Select Vehicle Type --</option>
+                <option value="">-- Select Vehicle --</option>
             </select>
             <span asp-validation-for="VehicleTypeId" class="text-danger"></span>
         </div>
