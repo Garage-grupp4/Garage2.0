@@ -7,21 +7,21 @@ public class ApplicationUser : IdentityUser
 {
     [Required]
     [StringLength(50, MinimumLength = 1)]
-    [Display(Name = "Förnamn")]
+    [Display(Name = "First Name")]
     public string FirstName { get; set; } = string.Empty;
 
     [Required]
     [StringLength(50, MinimumLength = 1)]
-    [Display(Name = "Efternamn")]
+    [Display(Name = "Last Name")]
     public string LastName { get; set; } = string.Empty;
 
     [Required]
     [RegularExpression(
         @"^\d{8}-\d{4}$",
-        ErrorMessage = "Personnummer måste ha formatet YYYYMMDD-XXXX"
+        ErrorMessage = "Personal Number must be in format YYYYMMDD-XXXX"
         )]
     [StringLength(13, MinimumLength = 13)]
-    [Display(Name = "Personnummer")]
+    [Display(Name = "Personal Number")]
     public string PersonNumber { get; set; } = string.Empty;
 
 
