@@ -24,16 +24,17 @@ public class Vehicle
     public required int Wheels { get; set; }
     public int VehicleTypeId { get; set; }
 
+    public required string ApplicationUserId { get; set; }
+    public ApplicationUser ApplicationUser { get; set; } = null!;
+
     public override string ToString()
     {
         return $"{VehicleType} {RegistrationNumber}";
     }
 
     [Display(Name = "Vehicle Type")]
-    public required VehicleType VehicleType { get; set; }
+    public  VehicleType? VehicleType { get; set; }
 
 
     public ICollection<ParkingSession> ParkingSessions { get; set; } = new List<ParkingSession>();
-    public string? OwnerId { get; set; }
-    public ApplicationUser? Owner { get; set; }
 }

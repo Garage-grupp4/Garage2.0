@@ -3,6 +3,7 @@ using System;
 using Garage2._0.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage2._0.Migrations
 {
     [DbContext(typeof(GarageContext))]
-    partial class GarageContextModelSnapshot : ModelSnapshot
+    [Migration("20260811074205_ApplicationUser")]
+    partial class ApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
@@ -126,7 +129,7 @@ namespace Garage2._0.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("ParkingSessions");
+                    b.ToTable("ParkingSession");
                 });
 
             modelBuilder.Entity("Garage2._0.Models.ParkingSpot", b =>
@@ -135,15 +138,15 @@ namespace Garage2._0.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsOutOfService")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("isOutOfService")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -161,6 +164,7 @@ namespace Garage2._0.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Color")
@@ -205,7 +209,6 @@ namespace Garage2._0.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -368,7 +371,8 @@ namespace Garage2._0.Migrations
                     b.HasOne("Garage2._0.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Vehicles")
                         .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Garage2._0.Models.VehicleType", "VehicleType")
                         .WithMany("Vehicles")

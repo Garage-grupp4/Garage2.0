@@ -30,7 +30,7 @@ namespace Garage2._0
 
             // builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
 
-            builder.Services.Configure<PrakingPricingOptions>(builder.Configuration.GetSection("PrakingPricing"));
+            builder.Services.Configure<ParkingPricingOptions>(builder.Configuration.GetSection("ParkingPricing"));
 
             // implementera Auth
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -58,6 +58,8 @@ namespace Garage2._0
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
             builder.Services.AddTransient<IEmailSender, GarageEmailSender>();
+            builder.Services.AddScoped<IVehicleDropDownService, VehicleDropDownService>();
+            builder.Services.AddScoped<IVehicleTypeDropDownService, VehicleTypeDropDownService>();
 
             var app = builder.Build();
 
