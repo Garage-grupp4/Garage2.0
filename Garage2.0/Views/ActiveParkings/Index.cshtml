@@ -1,0 +1,66 @@
+@model IEnumerable<Garage2._0.Models.ViewModels.ActiveParkingViewModel>
+
+@{
+    ViewData["Title"] = "Active Parkings";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row mb-3">
+    <div class="col-md-8">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="search" value="@ViewBag.CurrentSearch"
+                   class="form-control" placeholder="Search registration number..." />
+            <select name="vehicleTypeId" class="form-select" style="max-width: 200px;">
+                <option value="">All types</option>
+                @foreach (SelectListItem item in ViewBag.VehicleTypes)
+                {
+                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No active parkings found matching your criteria.
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.OwnerName)</th>
+                <th>@Html.DisplayNameFor(m => m.VehicleType)</th>
+                <th>@Html.DisplayNameFor(m => m.RegistrationNumber)</th>
+                <th>@Html.DisplayNameFor(m => m.SpotNumber)</th>
+                <th>@Html.DisplayNameFor(m => m.Location)</th>
+                <th>@Html.DisplayNameFor(m => m.ArrivalTime)</th>
+                <th>@Html.DisplayNameFor(m => m.Duration)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.OwnerName</td>
+                    <td>@item.VehicleType</td>
+                    <td>@item.RegistrationNumber</td>
+                    <td>@item.SpotNumber</td>
+                    <td>@item.Location</td>
+                    <td>@Html.DisplayFor(m => item.ArrivalTime)</td>
+                    <td>@item.Duration</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<p class="text-muted">
+    Showing @Model.Count() active parking(s)
+</p>
