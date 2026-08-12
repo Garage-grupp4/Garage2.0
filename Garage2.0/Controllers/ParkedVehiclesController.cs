@@ -131,9 +131,24 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Park(ParkViewModel model)
-
     {
-        
+        var user =await _userManager.GetUserAsync(User);  
+        var birthDate = user?.PersonNumberToDateTime();  
+        if (birthDate == null)  
+        {  
+            string error = $"Could not get personNumber data.";  
+            ModelState.AddModelError(nameof(user.PersonNumber), error);  
+            TempData["Error"] = error;  
+            return View(model);  
+        }  
+        var aliveTime = DateTime.Now.Subtract(birthDate.Value);  
+        if (aliveTime.TotalDays/365 < 18)  
+        {  
+            string warning = $"User is under 18 years old.";  
+            ModelState.AddModelError(nameof(user.PersonNumber), warning);  
+            TempData["Warning"] = warning;  
+            return View(model);  
+        }
         if (ModelState.IsValid)
         {
             var vehicle = await _context.Vehicles.FindAsync(model.SelectedVehicleId);

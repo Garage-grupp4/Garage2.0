@@ -26,4 +26,14 @@ public class ApplicationUser : IdentityUser
 
 
    public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+   
+   public DateTime PersonNumberToDateTime()  
+   {  
+       if (PersonNumber.Length < 8) throw  new Exception("Person number dosn't have enough data");  
+       int year, month, day;  
+       year = Convert.ToInt32(PersonNumber.Substring(0, 4));  
+       month = Convert.ToInt32(PersonNumber.Substring(4, 2));  
+       day = Convert.ToInt32(PersonNumber.Substring(6, 2));  
+       return new DateTime(year, month, day);  
+   }
 }
