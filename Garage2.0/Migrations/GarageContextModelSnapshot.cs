@@ -135,15 +135,15 @@ namespace Garage2._0.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsOutOfService")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Number")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("isOutOfService")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -205,6 +205,7 @@ namespace Garage2._0.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
