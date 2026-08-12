@@ -15,7 +15,7 @@ public class GarageEmailSender : IEmailSender
     public Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         _logger.LogInformation(
-            "Skulle skickat mail till {Email} med ämne '{Subject}'",
+            "Would have sent email to {Email} with subject '{Subject}'",
             email, subject);
         return Task.CompletedTask;
     }

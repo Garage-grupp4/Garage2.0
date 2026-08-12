@@ -27,4 +27,6 @@ public class CreateParkedVehicleViewModel
     [Display(Name = "Number Of Wheels")]
     [Range(0, 64, ErrorMessage = "Can't have that amount of wheels")]
     public required int Wheels { get; set; }
+
+
 }
