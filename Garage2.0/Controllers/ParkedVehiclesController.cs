@@ -1,9 +1,14 @@
+using Garage2._0.Constants;
 using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models;
 using Garage2._0.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Garage2._0.Services;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Options;
 
 namespace Garage2._0.Controllers;
 
@@ -11,20 +16,30 @@ namespace Garage2._0.Controllers;
 public class ParkedVehiclesController : Controller  //viewmodel för att visa en lista med parkerade fordon, med möjlighet att filtrera efter registreringsnummer och fordonstyp.
 {
     private readonly GarageContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IVehicleDropDownService vehicleDropDownService;
+    private readonly IOptions<ParkingPricingOptions> _pricingOptions;
 
-    public ParkedVehiclesController(GarageContext context)
+    public ParkedVehiclesController(
+        GarageContext context, 
+        UserManager<ApplicationUser> userManager, 
+        IVehicleDropDownService vehicleDropDownService, 
+        IOptions<ParkingPricingOptions> pricingOptions)
     {
         _context = context;
+        _userManager = userManager;
+        this.vehicleDropDownService = vehicleDropDownService;
+        _pricingOptions = pricingOptions;
     }
 
     // GET: PARKEDVEHICLES
-    public async Task<IActionResult> Index(string sort, string license, string type)
+    public async Task<IActionResult> Index(string sort, string license, int? type)//ToDo int type from search 
     {
         IQueryable<Vehicle> vehicles = _context.Vehicles; // Query the database for all parked vehicles. Removed select and var to avoid unnecessary data retrieval from the database.
 
         var user = GetApplicationUser();
         if (!IsAdmin())
-            vehicles = vehicles.Where(v => (v.OwnerId ?? "") == user.Id);
+            vehicles = vehicles.Where(v => (v.ApplicationUserId ?? "") == user.Id);
 
         ViewData["vehicletypes"] = _context.VehicleTypes.Select(t => t.Name).ToArray();
         // Save search terms to populate html page
@@ -35,8 +50,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         // Filter with search terms
         if (!string.IsNullOrEmpty(license))
             vehicles = vehicles.Where(v => v.RegistrationNumber.ToUpper().StartsWith(license.ToUpper())); // changed to startwith to make it more user friendly kanske använda Equals instead of ToUpper() for exact match, but then it would be case sensitive. Could use ToLower() instead of ToUpper() for case insensitive match.
-        if (!string.IsNullOrEmpty(type))
-            vehicles = vehicles.Where(v => v.VehicleType.Name == type);
+        if (type != null)
+            vehicles = vehicles.Where(v => v.VehicleTypeId == type);
 
         // Sort by Vehicle Type, Registration number, Arrival time, Time Parked
         switch (sort)
@@ -69,11 +84,11 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
                 break;
         }
 
-        var viewModel = await vehicles.Select(v => new VehicleOverViewModel // 
+        var viewModel = await vehicles.Select(v => new VehicleOverViewModel  
         {
             Id = v.Id,
             RegistrationNumber = v.RegistrationNumber,
-            VehicleType = v.VehicleType.Name,
+            VehicleType = v.VehicleType,
             ArrivalTime = v.ParkingSessions
                 .Where(ps => ps.DepartureTime == null)
                 .Select(ps => (DateTime?)ps.ArrivalTime)
@@ -90,13 +105,13 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     }
 
     //GET: PARKEDVEHICLES/Details/5
-    public async Task<IActionResult> Details(int? id) //kan göra lite snyggare här
+    public async Task<IActionResult> Details(int? id) 
     {
         if (id == null)
             return NotFound();
 
         var parkedvehicle = await _context.Vehicles
-            .Include(v => v.Owner)
+            .Include(v => v.ApplicationUser)
             .Include(v => v.VehicleType)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (parkedvehicle == null)
@@ -107,19 +122,84 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         return View(parkedvehicle);
     }
 
-    // GET: PARKEDVEHICLES/Create
-    public IActionResult Create()
+    // GET: PARKEDVEHICLES/Register
+    public async Task<IActionResult> Register()
     {
-        ViewData["vehicletypes"] = _context.VehicleTypes.ToArray();
         return View();
     }
+    public async Task<IActionResult> Park()
+    {
+        var model = new ParkViewModel
+        {
+            Vehicles = await vehicleDropDownService.GetVehicleSelectListAsync(_userManager.GetUserId(User))
 
-    // POST: PARKEDVEHICLES/Create
+        };
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Park(ParkViewModel model)
+    {
+        var user =await _userManager.GetUserAsync(User);  
+        var birthDate = user?.PersonNumberToDateTime();  
+        if (birthDate == null)  
+        {  
+            string error = $"Could not get personNumber data.";  
+            ModelState.AddModelError(nameof(user.PersonNumber), error);  
+            TempData["Error"] = error;  
+            return View(model);  
+        }  
+        var aliveTime = DateTime.Now.Subtract(birthDate.Value);  
+        if (aliveTime.TotalDays/365 < 18)  
+        {  
+            string warning = $"User is under 18 years old.";  
+            ModelState.AddModelError(nameof(user.PersonNumber), warning);  
+            TempData["Warning"] = warning;  
+            return View(model);  
+        }
+        if (ModelState.IsValid)
+        {
+            var vehicle = await _context.Vehicles.FindAsync(model.SelectedVehicleId);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var spot = await GetFirstAvailableParkingSpot();
+            if (spot == null)
+            {
+                ModelState.AddModelError(string.Empty, "No available parking spots.");
+                return View(model);
+            }
+
+            var session = new ParkingSession
+            {
+                VehicleId = vehicle.Id,
+                ParkingSpotId = spot.Id,
+                ArrivalTime = DateTime.Now,
+                HourlyRateForParking = _pricingOptions.Value.HourlyRate
+            };
+
+            _context.ParkingSessions.Add(session);
+            await _context.SaveChangesAsync();
+
+
+            TempData["Success"] = $"Successfully parked {vehicle.RegistrationNumber} in spot {spot.Number}.";
+            return RedirectToAction(nameof(Index));
+
+        }
+        return View(model);
+    }
+
+ 
+
+    // POST: PARKEDVEHICLES/Register
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateParkedVehicleViewModel model)
+    public async Task<IActionResult> Register(CreateParkedVehicleViewModel model)
     {
         // Validate if unique number or return model error
         if (!await IsRegistrationNumberUnique(model.RegistrationNumber))
@@ -131,30 +211,28 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         }
 
         // Generate newVehicle
-        ApplicationUser user = GetApplicationUser();
-        Vehicle newParkedVehicle = new Vehicle()
+        Vehicle newRegistredVehicle = new Vehicle()
         {
             //ArrivalTime = DateTime.Now, ToDo (In later task): set ArrivalTime by creating a ParkingSession here once parking flow exists
-            RegistrationNumber = NormalizeRegistrationNumber(model.RegistrationNumber),
+            ApplicationUserId = _userManager.GetUserId(User),
+            RegistrationNumber = model.RegistrationNumber,
             VehicleBrand = model.VehicleBrand,
             VehicleModel = model.VehicleModel,
-            VehicleType = _context.VehicleTypes.First(t => t.Id == model.VehicleTypeId),
+            VehicleTypeId = model.VehicleTypeId,
             Color = model.Color,
-            Wheels = model.Wheels,
-            OwnerId = user.Id,
-            Owner = user
+            Wheels = model.Wheels
         };
 
         // Send to Database
         if (ModelState.IsValid)
         {
-            _context.Add(newParkedVehicle);
+            _context.Add(newRegistredVehicle);
             await _context.SaveChangesAsync();
-            TempData["Success"] = $"Successfully Parked {newParkedVehicle}"; // at {newParkedVehicle.ArrivalTime}";
+            TempData["Success"] = $"Successfully Registred {newRegistredVehicle}"; 
             return RedirectToAction(nameof(Index));
         }
         ViewData["Error"] = "Error message text.";
-        return View();
+        return View(model);
     }
 
     private async Task<bool> IsRegistrationNumberUnique(string registrationNumber)
@@ -162,6 +240,23 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         return !await _context.Vehicles
             .AnyAsync(v => v.RegistrationNumber == registrationNumber);
     }
+
+    private async Task<ParkingSpot?> GetFirstAvailableParkingSpot()
+    {
+             return await _context.ParkingSpots
+            .Where(ps => !ps.ParkingSessions.Any(pss => pss.DepartureTime == null)) // Only include spots that are not currently occupied
+            .Where(ps => !ps.IsOutOfService)
+            .OrderBy(ps => ps.Number) // Optional: order by Id to get the first available spot
+            .FirstOrDefaultAsync();
+    }
+
+    //private async Task<List<Vehicle>> GetAvailableVehiclesForUser(string userId) 
+    //{
+    //    return await _context.Vehicles
+    //        .Where(v => v.ApplicationUserId == userId)
+    //        .Where(v => !v.ParkingSessions.Any(ps => ps.DepartureTime == null)) // Only include vehicles that are not currently parked
+    //        .ToListAsync();
+    //}
 
     [AcceptVerbs("GET", "POST")]
     public async Task<IActionResult> VerifyRegistrationNumber(string registationNumber)
@@ -329,11 +424,11 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     }
     private bool IsAdmin()
     {
-        var user = GetApplicationUser();
-        return user.PersonNumber == "111111111-1111"; // TODO: change to role based check
+        var roles = _userManager.GetRolesAsync(GetApplicationUser()).Result;
+        return roles.Contains(Roles.ADMIN); 
     }
     private bool IsAuthorized(Vehicle vehicle)
     {
-        return IsAdmin() || vehicle.OwnerId == GetApplicationUser().Id;
+        return IsAdmin() || vehicle.ApplicationUserId == GetApplicationUser().Id;
     }
 }

@@ -10,6 +10,8 @@ public class GarageContext(DbContextOptions<GarageContext> options) : IdentityDb
     public DbSet<Garage2._0.Models.VehicleType> VehicleTypes { get; set; } = default!;
     public DbSet<Garage2._0.Models.ParkingSpot> ParkingSpots { get; set; } = default!;
 
+    public DbSet<Garage2._0.Models.ParkingSession> ParkingSessions { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Vehicle>().HasIndex(p => p.RegistrationNumber).IsUnique();
@@ -41,9 +43,9 @@ public class GarageContext(DbContextOptions<GarageContext> options) : IdentityDb
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Vehicle>()
-                    .HasOne(v => v.Owner)
+                    .HasOne(v => v.ApplicationUser)
                     .WithMany(u => u.Vehicles)
-                    .HasForeignKey(v => v.OwnerId)
+                    .HasForeignKey(v => v.ApplicationUserId)
                     .IsRequired(false)
                     .OnDelete(DeleteBehavior.Restrict);
         
