@@ -17,6 +17,7 @@ namespace Garage2._0.Services
         {
             var vehicleTypes = await context.Vehicles
                 .Where(v => v.ApplicationUserId == userId)
+                .Where(v => v.ParkingSessions.All(p => p.DepartureTime != null))
                 .Select(v => new SelectListItem
                 {
                     Value = v.Id.ToString(),

@@ -245,6 +245,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     {
              return await _context.ParkingSpots
             .Where(ps => !ps.ParkingSessions.Any(pss => pss.DepartureTime == null)) // Only include spots that are not currently occupied
+            .Where(ps => !ps.IsOutOfService)
             .OrderBy(ps => ps.Number) // Optional: order by Id to get the first available spot
             .FirstOrDefaultAsync();
     }
