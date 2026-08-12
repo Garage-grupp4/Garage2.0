@@ -11,7 +11,7 @@ public class CreateParkedVehicleViewModel
     public required string RegistrationNumber { get; set; } //CuStom validation. RE USE ON EDIT PARKED VEHICLE VIEW MODEL
 
     [Display(Name = "Type")]
-    public required VehicleType VehicleType { get; set; }
+    public required int VehicleTypeId { get; set; }
 
     [StringLength(20, ErrorMessage = "Name length can't be more than 20.")]
     [Display(Name = "Model")]
@@ -27,4 +27,6 @@ public class CreateParkedVehicleViewModel
     [Display(Name = "Number Of Wheels")]
     [Range(0, 64, ErrorMessage = "Can't have that amount of wheels")]
     public required int Wheels { get; set; }
+
+
 }

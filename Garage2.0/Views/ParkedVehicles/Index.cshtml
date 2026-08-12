@@ -1,4 +1,5 @@
 @model IEnumerable<Garage2._0.Models.ViewModels.VehicleOverViewModel>
+@inject IVehicleTypeDropDownService dropdownService
 
 @{
     ViewData["Title"] = "Garage Overview";
@@ -18,19 +19,9 @@
         </div>
         <div class="col-md-4">
             <label class="form-label">Vehicle Type</label>
-            <select class="form-select" name="type">
-                <option value=""></option>
-                @* @foreach (var type in Html.GetEnumSelectList<VehicleType>())
-                {
-                    if (ViewData["type"]?.ToString() == type.Text)
-                    {
-                        <option value="@type.Value" selected>@type.Text</option>
-                    }
-                    else
-                    {
-                        <option value="@type.Value">@type.Text</option>
-                    }
-                } *@
+            <select class="form-select" name="type" 
+                 asp-items="@await dropdownService.GetVehicleTypesAsync()">
+                <option value="">-- Select Vehicle Type --</option>
             </select>
         </div>
         <div class="col-md-4">

@@ -1,0 +1,42 @@
+﻿@model ParkViewModel
+
+@{
+
+}
+
+<div class="page-header">
+    <h1>Park Vehicle</h1>
+    <hr />
+</div>
+
+<div class="form-container">
+    <form asp-action="Park">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="SelectedVehicleId" class="form-label">Vehicle Type</label>
+            <select asp-for="SelectedVehicleId" class="form-select"
+                    asp-items="@Model.Vehicles">
+                <option value="">-- Select Vehicle to park --</option>
+            </select>
+            <span asp-validation-for="SelectedVehicleId" class="text-danger"></span>
+        </div>
+
+
+        <div class="action-bar">
+            <button type="submit" class="btn btn-primary">Park</button>
+            <a asp-action="Index" class="btn btn-secondary">← Back to List</a>
+        </div>
+    </form>
+</div>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+
