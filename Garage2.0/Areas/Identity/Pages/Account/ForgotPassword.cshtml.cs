@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 
 namespace Garage2._0.Areas.Identity.Pages.Account
 {
@@ -56,26 +57,28 @@ namespace Garage2._0.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (user is null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
+                    // Visa inte att användaren existerar inte
                     return RedirectToPage("./ForgotPasswordConfirmation");
                 }
 
-                // For more information on how to enable account confirmation and password reset please
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
-                    pageHandler: null,
-                    values: new { area = "Identity", code },
-                    protocol: Request.Scheme);
+                        pageName: "Account/ResetPassword",
+                        pageHandler: null,
+                        values: new { area = "Identity", code },
+                        protocol: Request.Scheme
+                        );
 
                 await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Återställ lösenord",
-                    $"Återställ ditt lösenord genom att <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>klicka här</a>.");
+                        email: Input.Email,
+                        subject: "Recover Password",
+htmlMessage: $"Recover your Password with <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>click here</a>."
+                        );
+
+                TempData["ResetLink"] = callbackUrl;
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

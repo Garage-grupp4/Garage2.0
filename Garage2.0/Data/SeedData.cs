@@ -16,10 +16,10 @@ public static class SeedData
         {
             var _roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-            await SeedRoles(db,_roleManager);
+            await SeedRoles(db, _roleManager);
             await SeedAdminUser(db, _userManager);
         }
-        
+
         if (db.Vehicles.Any())
         {
             var count = db.Vehicles.Count();
@@ -28,23 +28,28 @@ public static class SeedData
         }
 
         Console.WriteLine("→ Tom databas hittad. Seedar testdata...");
-
-        var carType = new VehicleType { Name = "Car" };
-        var motorcycleType = new VehicleType { Name = "Motorcycle" };
-        var busType = new VehicleType { Name = "Bus" };
-        var truckType = new VehicleType { Name = "Truck" };
-
-        db.VehicleTypes.AddRange(carType, motorcycleType, busType, truckType);
-        db.SaveChanges();
-
-        var spots = new List<ParkingSpot>();
-        for (int i = 2; i <= 40; i += 2)
+        if (!db.VehicleTypes.Any())
         {
-            spots.Add(new ParkingSpot { Number = i, Location = "Garage A", isOutOfService = false });
+            var carType = new VehicleType { Name = "Car" };
+            var motorcycleType = new VehicleType { Name = "Motorcycle" };
+            var busType = new VehicleType { Name = "Bus" };
+            var truckType = new VehicleType { Name = "Truck" };
+
+            db.VehicleTypes.AddRange(carType, motorcycleType, busType, truckType);
+            db.SaveChanges();
         }
 
-        db.ParkingSpots.AddRange(spots);    
-        db.SaveChanges();
+        if (!db.ParkingSpots.Any())
+        {
+            var spots = new List<ParkingSpot>();
+            for (int i = 2; i <= 40; i += 2)
+            {
+                spots.Add(new ParkingSpot { Number = i, Location = "Garage A", IsOutOfService = false });
+            }
+
+            db.ParkingSpots.AddRange(spots);
+            db.SaveChanges();
+        }
 
         var added = db.SaveChanges();
         Console.WriteLine($"✓ Seed klar — {added} fordon tillagda.");
@@ -62,28 +67,28 @@ public static class SeedData
 
             var result = await roleManager.CreateAsync(role);
 
-            if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors)); 
+            if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
         }
     }
 
-    private static async Task SeedAdminUser(GarageContext db,UserManager<ApplicationUser> userManager)
+    private static async Task SeedAdminUser(GarageContext db, UserManager<ApplicationUser> userManager)
     {
-        var admin = await AddAccountAsync(userManager, 
-            "admin@admin.com", 
+        var admin = await AddAccountAsync(userManager,
+            "admin@admin.com",
             "adminuser",
-            "Adminsson", 
+            "Adminsson",
             "password1!");
 
         await userManager.AddToRoleAsync(admin, Roles.ADMIN);
     }
-    
-    
-    private static async Task<ApplicationUser> AddAccountAsync(UserManager<ApplicationUser> userManager,string accountEmail, string fName, string lName, string pw)
+
+
+    private static async Task<ApplicationUser> AddAccountAsync(UserManager<ApplicationUser> userManager, string accountEmail, string fName, string lName, string pw)
     {
         var found = await userManager.FindByEmailAsync(accountEmail);
 
         // Returns if exists, maybe give warning in the future instead
-        if (found != null) return found; 
+        if (found != null) return found;
 
         ApplicationUser user = new ApplicationUser
         {
@@ -94,11 +99,11 @@ public static class SeedData
             PersonNumber = "111111111-1111",
             EmailConfirmed = true
         };
-        
+
         var result = await userManager.CreateAsync(user, pw);
 
         if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
 
-        return user; 
+        return user;
     }
 }

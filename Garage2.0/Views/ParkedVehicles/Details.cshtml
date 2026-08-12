@@ -20,7 +20,10 @@
     <dd class="col-sm-9">@((DateTime.Now - Model.ArrivalTime).ToString(@"d\d\ hh\:mm"))</dd> *@
 
     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleType)</dt>
-    <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleType)</dd>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleType.Name)</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Owner)</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Owner.Email)</dd>
 
     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleModel)</dt>
     <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleModel)</dd>
