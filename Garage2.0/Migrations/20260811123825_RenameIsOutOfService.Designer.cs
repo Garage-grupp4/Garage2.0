@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage2._0.Migrations
 {
     [DbContext(typeof(GarageContext))]
-    [Migration("20260806143558_Innit")]
-    partial class Innit
+    [Migration("20260811123825_RenameIsOutOfService")]
+    partial class RenameIsOutOfService
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,6 +138,9 @@ namespace Garage2._0.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsOutOfService")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -146,15 +149,12 @@ namespace Garage2._0.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsOutOfService")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Number")
                         .IsUnique();
 
-                    b.ToTable("ParkingSpot");
+                    b.ToTable("ParkingSpots");
                 });
 
             modelBuilder.Entity("Garage2._0.Models.Vehicle", b =>
@@ -192,7 +192,7 @@ namespace Garage2._0.Migrations
 
                     b.HasIndex("VehicleTypeId");
 
-                    b.ToTable("ParkedVehicle");
+                    b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("Garage2._0.Models.VehicleType", b =>
@@ -203,6 +203,7 @@ namespace Garage2._0.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -210,7 +211,7 @@ namespace Garage2._0.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("VehicleType");
+                    b.ToTable("VehicleTypes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

@@ -1,16 +1,18 @@
-@model Garage2._0.Models.ViewModels.CreateParkedVehicleViewModel
+@using System.Security.Claims
 
+@model Garage2._0.Models.ViewModels.CreateParkedVehicleViewModel
+@inject IVehicleTypeDropDownService dropdownService
 @{
-    ViewData["Title"] = "Create New Vehicle";
+    ViewData["Title"] = "Register New Vehicle";
 }
 
 <div class="page-header">
-    <h1>Create New Vehicle</h1>
+    <h1>Register New Vehicle</h1>
     <hr />
 </div>
 
 <div class="form-container">
-    <form asp-action="Create">
+    <form asp-action="Register">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="mb-3">
@@ -20,14 +22,10 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="VehicleTypeId" class="form-label"></label>
-            <select asp-for="VehicleTypeId" class="form-select">
-                <option value=""></option>
-                @foreach (var type in (VehicleType[])(ViewData["vehicletypes"] ?? new VehicleType[] { }))
-                {
-                    <option value="@type.Id">@type.Name</option>
-                }
-
+            <label asp-for="VehicleTypeId" class="form-label">Vehicle</label>
+            <select asp-for="VehicleTypeId" class="form-select"
+                asp-items="@await dropdownService.GetVehicleTypesAsync()">
+                <option value="">-- Select Vehicle --</option>
             </select>
             <span asp-validation-for="VehicleTypeId" class="text-danger"></span>
         </div>
@@ -57,7 +55,7 @@
         </div>
 
         <div class="action-bar">
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">Register</button>
             <a asp-action="Index" class="btn btn-secondary">← Back to List</a>
         </div>
     </form>

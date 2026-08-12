@@ -126,7 +126,7 @@ namespace Garage2._0.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("ParkingSession");
+                    b.ToTable("ParkingSessions");
                 });
 
             modelBuilder.Entity("Garage2._0.Models.ParkingSpot", b =>
@@ -135,15 +135,15 @@ namespace Garage2._0.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsOutOfService")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Number")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("isOutOfService")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -160,10 +160,10 @@ namespace Garage2._0.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Color")
+                    b.Property<string>("ApplicationUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OwnerId")
+                    b.Property<string>("Color")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RegistrationNumber")
@@ -187,7 +187,7 @@ namespace Garage2._0.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("RegistrationNumber")
                         .IsUnique();
@@ -205,6 +205,7 @@ namespace Garage2._0.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -364,9 +365,9 @@ namespace Garage2._0.Migrations
 
             modelBuilder.Entity("Garage2._0.Models.Vehicle", b =>
                 {
-                    b.HasOne("Garage2._0.Models.ApplicationUser", "Owner")
+                    b.HasOne("Garage2._0.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Vehicles")
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Garage2._0.Models.VehicleType", "VehicleType")
@@ -375,7 +376,7 @@ namespace Garage2._0.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Owner");
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("VehicleType");
                 });
