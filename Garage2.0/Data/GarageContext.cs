@@ -42,6 +42,13 @@ public class GarageContext(DbContextOptions<GarageContext> options) : IdentityDb
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Vehicle>()
+                    .HasOne(v => v.Owner)
+                    .WithMany(u => u.Vehicles)
+                    .HasForeignKey(v => v.OwnerId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.Restrict);
+        
         base.OnModelCreating(modelBuilder);
     }
 }

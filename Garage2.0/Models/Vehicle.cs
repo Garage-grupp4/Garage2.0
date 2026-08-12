@@ -37,4 +37,6 @@ public class Vehicle
 
 
     public ICollection<ParkingSession> ParkingSessions { get; set; } = new List<ParkingSession>();
+    public string? OwnerId { get; set; }
+    public ApplicationUser? Owner { get; set; }
 }

@@ -25,8 +25,31 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.IsInRole(Roles.ADMIN))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ApplicationUser" asp-action="Index">User Admin Page</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="ApplicationUser"
+                                           asp-action="Index">
+                                            Users
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="VehicleTypes"
+                                           asp-action="Index">
+                                            Vehicle Types
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="ParkingSpots"
+                                           asp-action="Index">
+                                            Parking Spots
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         }
                     </ul>
