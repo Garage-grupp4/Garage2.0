@@ -162,7 +162,7 @@ namespace Garage2._0.Controllers
 
             if (parkingSpot.ParkingSessions.Count > 0)
             {
-                TempData["Error"] = $"Kan inte ta bort plats {parkingSpot.Number} — {parkingSpot.ParkingSessions.Count} parkering(ar) i historiken. Markera platsen som 'Ur funktion' istället.";
+                TempData["Error"] = $"Cannot delete spot {parkingSpot.Number} — {parkingSpot.ParkingSessions.Count} parking(s) in history. Mark the spot as 'Out of Service' instead.";
                 return RedirectToAction(nameof(Index));
             }
             _context.ParkingSpots.Remove(parkingSpot);

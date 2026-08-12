@@ -150,7 +150,7 @@ namespace Garage2._0.Controllers
 
             if (vehicleType.Vehicles.Count > 0)
             {
-                TempData["Error"] = $"Kan inte ta bort '{vehicleType.Name}' — {vehicleType.Vehicles.Count} fordon använder denna typ.";
+                TempData["Error"] = $"Cannot delete '{vehicleType.Name}' — {vehicleType.Vehicles.Count} vehicle(s) use this type.";
                 return RedirectToAction(nameof(Index));
             }
 
