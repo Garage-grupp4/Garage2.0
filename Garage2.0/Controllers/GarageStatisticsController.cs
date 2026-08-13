@@ -36,9 +36,6 @@ public class GarageStatisticsController : Controller
             ))
             .ToListAsync();
         
-        var vehicleCount = new List<KeyValuePair<string, int>>();
-        vehicleCount.Add(new KeyValuePair<string, int>("Car", 2));
-        vehicleCount.Add(new KeyValuePair<string, int>("Truck", 1));
         var viewModel = new GarageStatisticsViewModel()
         {
             FreeGarageSpaces = _context.ParkingSpots.Count(p => !p.IsOutOfService &&
