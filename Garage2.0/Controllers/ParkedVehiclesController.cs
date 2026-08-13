@@ -129,9 +129,12 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     }
     public async Task<IActionResult> Park()
     {
+        var result = await _userManager.GetUserAsync(User);
+        if (result== null) throw new ApplicationException("You are not logged in.");
+        ApplicationUser user = result;
         var model = new ParkViewModel
         {
-            Vehicles = await vehicleDropDownService.GetVehicleSelectListAsync(_userManager.GetUserId(User))
+            Vehicles = await vehicleDropDownService.GetVehicleSelectListAsync(user)
 
         };
         return View(model);
