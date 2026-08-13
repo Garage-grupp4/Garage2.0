@@ -407,7 +407,7 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         await _context.SaveChangesAsync();
 
         var receiptViewModel = new ReceiptViewModel
-        
+        {
         Id = parkingSession.Vehicle.Id,
         RegistrationNumber = parkingSession.Vehicle.RegistrationNumber,
         VehicleType = parkingSession.Vehicle.VehicleType,
