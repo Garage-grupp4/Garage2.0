@@ -9,7 +9,15 @@
         <h1>Check Out Vehicle</h1>
         <span class="header-reg">@Model.RegistrationNumber</span>
         <span class="header-meta">
-            @* <strong>Arrival:</strong> @Model.ArrivalTime // Needs to be fixed in later tasks *@
+            @{
+             var parkingSession = Model.ParkingSessions.FirstOrDefault(p => p.DepartureTime == null);
+            }
+            @if (parkingSession != null)
+            {
+                <strong>Arrival:</strong> 
+                @parkingSession.ArrivalTime.ToString("yyyy-MM-dd HH:mm")
+            }
+
         </span>
     </div>
     <p class="text-muted mt-2 mb-0">Are you sure you want to check out this vehicle?</p>
@@ -18,10 +26,17 @@
 
 <dl class="row">
     <dt class="col-sm-3">Vehicle Type</dt>
-    <dd class="col-sm-9">@Model.VehicleType</dd>
+    <dd class="col-sm-9">@Model.VehicleType.Name</dd>
 
     <dt class="col-sm-3">Brand / Model</dt>
     <dd class="col-sm-9">@Model.VehicleBrand @Model.VehicleModel</dd>
+
+    @if (parkingSession != null && parkingSession.ParkingSpot != null)
+    {
+      <dt class="col-sm-3">Parking Spot</dt>
+      <dd class="col-sm-9">@parkingSession.ParkingSpot.Number</dd>  
+    }
+
 </dl>
 
 <form asp-action="Delete">

@@ -56,6 +56,12 @@
                                                 Active Parkings
                                             </a>
                                         </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-area="" asp-controller="GarageStatistics"
+                                               asp-action="Index">
+                                                Garage Statistics
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             }
@@ -72,47 +78,52 @@
                                     + Register Vehicle
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary" asp-area="" asp-controller="ParkedVehicles"
+                                   asp-action="History">
+                                    History
+                                </a>
+                            </li>
                         </ul>
                         <partial name="_LoginPartial" />
                     </div>
-                </div>
-            </nav>
-        </header>
-        <div class="container">
-            <div class="d-print-none">
-                @if (TempData["Success"] != null)
-                {
-                    <div id="success" class="alert alert-success" role="alert">
-                        @TempData["Success"]
-                    </div>
-                }
-                @if (TempData["Warning"] != null)
-                {
-                    <div id="warning" class="alert alert-warning" role="alert">
-                        @TempData["Warning"]
-                    </div>
-                }
-                @if (TempData["Error"] != null)
-                {
-                    <div id="danger" class="alert alert-danger" role="alert">
-                        @TempData["Error"]
-                    </div>
-                }
-            </div>
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
-        </div>
-
-        <footer class="border-top footer text-muted">
+                </nav>
+            </header>
             <div class="container">
-                &copy; 2026 - Parking Garage - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <div class="d-print-none">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div id="success" class="alert alert-success" role="alert">
+                            @TempData["Success"]
+                        </div>
+                    }
+                    @if (TempData["Warning"] != null)
+                    {
+                        <div id="warning" class="alert alert-warning" role="alert">
+                            @TempData["Warning"]
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div id="danger" class="alert alert-danger" role="alert">
+                            @TempData["Error"]
+                        </div>
+                    }
+                </div>
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
             </div>
-        </footer>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        @await RenderSectionAsync("Scripts", required: false)
-    </body>
 
-</html>
+            <footer class="border-top footer text-muted">
+                <div class="container">
+                    &copy; 2026 - Parking Garage - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+            </footer>
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+            @await RenderSectionAsync("Scripts", required: false)
+        </body>
+
+    </html>

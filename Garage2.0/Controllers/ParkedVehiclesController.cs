@@ -364,20 +364,19 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     // GET: PARKEDVEHICLES/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
-        var vehicle = await _context.Vehicles
-            .FirstOrDefaultAsync(m => m.Id == id);
+        var parkingSession = await _context.ParkingSessions
+            .Include(p => p.Vehicle)
+            .ThenInclude(v => v.VehicleType)
+            .Include(p => p.ParkingSpot)
+            .FirstOrDefaultAsync(p => p.VehicleId == id && p.DepartureTime == null);
 
-        if (vehicle == null)
-        {
-            return NotFound();
-        }
+        if (parkingSession == null) return NotFound();
 
-        return View(vehicle);
+        if(!IsAuthorized(parkingSession.Vehicle)) return Unauthorized();
+        
+        return View(parkingSession.Vehicle);
     }
 
     // POST: PARKEDVEHICLES/Delete/5
@@ -385,28 +384,108 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
-        var vehicle = await _context.Vehicles.FindAsync(id);
+        if (id == null) return NotFound();
 
-        if (vehicle == null) return NotFound();
-        if (!IsAuthorized(vehicle)) return Unauthorized();
+        var parkingSession = await _context.ParkingSessions
+            .Include(p => p.Vehicle)
+            .ThenInclude(v => v.ApplicationUser)
+            .Include(p => p.ParkingSpot)
+            .Include(parkingSession => parkingSession.Vehicle)
+            .ThenInclude(vehicle => vehicle.VehicleType)
+            .FirstOrDefaultAsync(p => p.VehicleId == id && p.DepartureTime == null);
 
-        var receipt = new ReceiptViewModel
+        if(parkingSession == null) return NotFound();
+
+        if(!IsAuthorized(parkingSession.Vehicle)) return Unauthorized();
+        
+        parkingSession.DepartureTime = DateTime.Now;
+
+        var duration = parkingSession.DepartureTime.Value - parkingSession.ArrivalTime;
+        var totalHours = (decimal)Math.Ceiling(duration.TotalHours);
+        if(totalHours < 1) totalHours = 1; // Minimum charge for 1 hour)
+
+        parkingSession.TotalCost = totalHours * parkingSession.HourlyRateForParking;
+
+        await _context.SaveChangesAsync();
+
+        var receiptViewModel = new ReceiptViewModel
         {
-            Id = vehicle.Id,
-            RegistrationNumber = vehicle.RegistrationNumber,
-            VehicleType = vehicle.VehicleType,
-            VehicleBrand = vehicle.VehicleBrand,
-            VehicleModel = vehicle.VehicleModel,
-            Color = vehicle.Color,
-            Wheels = vehicle.Wheels,
-            //ArrivalTime = vehicle.ArrivalTime,  TODO (In Later Task): ArrivalTime/DepartureTime now come from the active ParkingSession, not Vehicle — checkout flow needs rework
-            DepartureTime = DateTime.Now
+        Id = parkingSession.Vehicle.Id,
+        RegistrationNumber = parkingSession.Vehicle.RegistrationNumber,
+        VehicleType = parkingSession.Vehicle.VehicleType,
+        VehicleBrand = parkingSession.Vehicle.VehicleBrand,
+        VehicleModel = parkingSession.Vehicle.VehicleModel,
+        Color = parkingSession.Vehicle.Color,
+        Wheels = parkingSession.Vehicle.Wheels,
+        ArrivalTime = parkingSession.ArrivalTime,
+        DepartureTime = parkingSession.DepartureTime.Value,
+        TotalPrice = parkingSession.TotalCost.Value,
+
+        UserFirstName = parkingSession.Vehicle.ApplicationUser.FirstName,
+        UserLastName = parkingSession.Vehicle.ApplicationUser.LastName,
+        ParkingSpotNumber = parkingSession.ParkingSpot.Number,
+        HourlyRate = parkingSession.HourlyRateForParking,   
+
         };
 
-        _context.Vehicles.Remove(vehicle);
-        await _context.SaveChangesAsync();
-        TempData["Success"] = $"Successfully check out {vehicle} ";
-        return View("Receipt", receipt);
+        TempData["Success"] = $"Successfully checked out {parkingSession.Vehicle.RegistrationNumber} from spot {parkingSession.ParkingSpot.Number}.";
+        return View("Receipt", receiptViewModel);
+    }
+
+    public async Task<IActionResult> History()
+    {
+        var userId = _userManager.GetUserId(User);
+
+        var history = await _context.ParkingSessions
+            .Where(ps => ps.DepartureTime != null)
+            .Where(ps => ps.Vehicle.ApplicationUserId == userId)
+            .OrderByDescending(ps => ps.DepartureTime)
+            .Select(ps => new ParkingHistoryViewModel
+            {
+                ParkingSessionId = ps.Id,
+                RegistrationNumber = ps.Vehicle.RegistrationNumber,
+                DepartureTime = ps.DepartureTime!.Value,
+                TotalPrice = ps.TotalCost ?? 0
+            })
+            .ToListAsync();
+
+        return View(history);
+    }
+
+
+    public async Task<IActionResult> Receipt(int id)
+    {
+        var parkingSession = await _context.ParkingSessions
+            .Include(p => p.Vehicle)
+            .ThenInclude(v => v.VehicleType)
+            .Include(p => p.Vehicle)
+            .ThenInclude(v => v.ApplicationUser)
+            .Include(p => p.ParkingSpot)
+            .FirstOrDefaultAsync(p => p.Id == id && p.DepartureTime != null);
+
+        if (parkingSession == null) return NotFound();
+
+        if (!IsAuthorized(parkingSession.Vehicle)) return Unauthorized();
+
+        var receiptViewModel = new ReceiptViewModel
+        {
+            Id = parkingSession.Vehicle.Id,
+            RegistrationNumber = parkingSession.Vehicle.RegistrationNumber,
+            VehicleType = parkingSession.Vehicle.VehicleType,
+            VehicleBrand = parkingSession.Vehicle.VehicleBrand,
+            VehicleModel = parkingSession.Vehicle.VehicleModel,
+            Color = parkingSession.Vehicle.Color,
+            Wheels = parkingSession.Vehicle.Wheels,
+            ArrivalTime = parkingSession.ArrivalTime,
+            DepartureTime = parkingSession.DepartureTime!.Value,
+            TotalPrice = parkingSession.TotalCost!.Value,
+            UserFirstName = parkingSession.Vehicle.ApplicationUser.FirstName,
+            UserLastName = parkingSession.Vehicle.ApplicationUser.LastName,
+            ParkingSpotNumber = parkingSession.ParkingSpot.Number,
+            HourlyRate = parkingSession.HourlyRateForParking
+        };
+
+        return View("Receipt", receiptViewModel);
     }
 
     private bool ParkedVehicleExists(int? id)
