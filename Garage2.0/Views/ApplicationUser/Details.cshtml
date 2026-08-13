@@ -1,0 +1,70 @@
+@model Garage2._0.Models.ViewModels.MemberDetailsViewModel
+
+@{
+    ViewData["Title"] = $"Member: {Model.FirstName} {Model.LastName}";
+}
+
+<div class="page-header">
+    <h1>@Model.FirstName @Model.LastName</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back to members</a>
+    <hr />
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Email)</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.PersonNumber)</dt>
+    <dd class="col-sm-9">@Model.PersonNumber</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Role)</dt>
+    <dd class="col-sm-9">@Model.Role</dd>
+</dl>
+
+<h2>Vehicles (@Model.Vehicles.Count)</h2>
+
+@if (!Model.Vehicles.Any())
+{
+    <div class="alert alert-info">This member has no registered vehicles.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Vehicles.First().RegistrationNumber)</th>
+                <th>@Html.DisplayNameFor(m => m.Vehicles.First().Brand)</th>
+                <th>@Html.DisplayNameFor(m => m.Vehicles.First().Model)</th>
+                <th>@Html.DisplayNameFor(m => m.Vehicles.First().Color)</th>
+                <th>@Html.DisplayNameFor(m => m.Vehicles.First().VehicleType)</th>
+                <th>@Html.DisplayNameFor(m => m.Vehicles.First().IsCurrentlyParked)</th>
+                <th class="text-end">@Html.DisplayNameFor(m => m.Vehicles.First().CurrentCost)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var v in Model.Vehicles)
+            {
+                <tr>
+                    <td>@v.RegistrationNumber</td>
+                    <td>@v.Brand</td>
+                    <td>@v.Model</td>
+                    <td>@v.Color</td>
+                    <td>@v.VehicleType</td>
+                    <td>
+                        @if (v.IsCurrentlyParked)
+                        {
+                            <span class="badge bg-success">Parked</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Not parked</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        @(v.CurrentCost.HasValue ? $"{v.CurrentCost.Value:N2} kr" : "—")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
