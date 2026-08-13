@@ -77,13 +77,19 @@ public static class SeedData
             "admin@admin.com",
             "adminuser",
             "Adminsson",
-            "password1!");
+            "password1!",
+            "111111-1111");
 
         await userManager.AddToRoleAsync(admin, Roles.ADMIN);
     }
 
 
-    private static async Task<ApplicationUser> AddAccountAsync(UserManager<ApplicationUser> userManager, string accountEmail, string fName, string lName, string pw)
+    private static async Task<ApplicationUser> AddAccountAsync(UserManager<ApplicationUser> userManager, 
+        string accountEmail, 
+        string fName, 
+        string lName, 
+        string pw,
+        string personNumber)
     {
         var found = await userManager.FindByEmailAsync(accountEmail);
 
@@ -96,7 +102,7 @@ public static class SeedData
             Email = accountEmail,
             FirstName = fName,
             LastName = lName,
-            PersonNumber = "111111111-1111",
+            PersonNumber = personNumber,
             EmailConfirmed = true
         };
 
