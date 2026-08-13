@@ -1,0 +1,49 @@
+@model GarageStatisticsViewModel
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+
+<head>
+    <title>Statistics</title>
+</head>
+<body>
+<div>
+    <dl class="row">
+        @*<dt class="col-sm-3">Parked Time</dt>
+    <dd class="col-sm-9">@((DateTime.Now - Model.ArrivalTime).ToString(@"d\d\ hh\:mm"))</dd> *@
+        <h2 >Parking statistics</h2>
+
+        <dt class="col-sm-3">Free Garage Spaces</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.FreeGarageSpaces)</dd>
+
+        <dt class="col-sm-3">Occupied Garage Spaces</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.OccupiedGarageSpaces)</dd>
+
+        <dt class="col-sm-3">Out of order Garage Spaces</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.OutOfOrderGarageSpaces)</dd>
+        <h2 class="col-sm-3">Vehicles</h2>
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+            <th>
+                Vehicle Type
+            </th>
+            <th>
+                Count
+            </th>
+            </thead>
+            <tbody>
+            @foreach (var vehicleCount in Model.VehiclesCountPerGarage)
+            {
+                <tr>
+                    <td>@vehicleCount.Key</td>
+                    <td>@vehicleCount.Value</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </dl>
+
+</div>
+</body>
