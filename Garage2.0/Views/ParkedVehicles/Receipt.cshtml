@@ -16,6 +16,12 @@
 </div>
 
 <dl class="row">
+    <dt class="col-sm-3">Owner</dt>
+    <dd class="col-sm-9">@Model.UserFirstName @Model.UserLastName</dd>
+
+    <dt class="col-sm-3">Parking Spot</dt>
+    <dd class="col-sm-9">@Model.ParkingSpotNumber</dd>
+
     <dt class="col-sm-3">Vehicle Type</dt>
     <dd class="col-sm-9">@Model.VehicleType</dd>
 
@@ -38,8 +44,14 @@
     <dt class="col-sm-3">Arrival Time</dt>
     <dd class="col-sm-9">@Model.ArrivalTime.ToString("yy-MM-dd HH:mm")</dd>
 
+    <dt class="col-sm-3">Departure Time</dt>
+    <dd class="col-sm-9">@Model.DepartureTime.ToString("yy-MM-dd HH:mm")</dd>
+
     <dt class="col-sm-3">Total Time Parked</dt>
     <dd class="col-sm-9">@Model.TotalTimeParked.ToString(@"hh\:mm") hours</dd>
+
+    <dt class="col-sm-3">Hourly Rate</dt>
+    <dd class="col-sm-9">@Model.HourlyRate.ToString("C") / hour</dd>
 
     <dt class="col-sm-3">Total Price</dt>
     <dd class="col-sm-9 fw-bold">@Model.TotalPrice.ToString("C")</dd>
