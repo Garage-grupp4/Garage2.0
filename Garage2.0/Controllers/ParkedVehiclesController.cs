@@ -390,6 +390,8 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
             .Include(p => p.Vehicle)
             .ThenInclude(v => v.ApplicationUser)
             .Include(p => p.ParkingSpot)
+            .Include(parkingSession => parkingSession.Vehicle)
+            .ThenInclude(vehicle => vehicle.VehicleType)
             .FirstOrDefaultAsync(p => p.VehicleId == id && p.DepartureTime == null);
 
         if(parkingSession == null) return NotFound();
