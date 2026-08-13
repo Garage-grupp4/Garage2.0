@@ -1,4 +1,4 @@
-@model Garage2._0.Models.ParkedVehicle
+@model Garage2._0.Models.Vehicle
 
 @{
     ViewData["Title"] = "Vehicle Details";
@@ -9,18 +9,21 @@
         <h1>Vehicle Details</h1>
         <span class="header-reg">@Model.RegistrationNumber</span>
         <span class="header-meta">
-            <strong>Arrival:</strong> @Html.DisplayFor(model => model.ArrivalTime)
+          @*   <strong>Arrival:</strong> @Html.DisplayFor(model => model.CheckInTime) *@
         </span>
     </div>
     <hr />
 </div>
 
 <dl class="row">
-    <dt class="col-sm-3">Parked Time</dt>
-    <dd class="col-sm-9">@((DateTime.Now - Model.ArrivalTime).ToString(@"d\d\ hh\:mm"))</dd>
+   @*<dt class="col-sm-3">Parked Time</dt>
+    <dd class="col-sm-9">@((DateTime.Now - Model.ArrivalTime).ToString(@"d\d\ hh\:mm"))</dd> *@
 
     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleType)</dt>
-    <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleType)</dd>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleType.Name)</dd>
+
+    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ApplicationUser)</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.ApplicationUser.Email)</dd>
 
     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleModel)</dt>
     <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleModel)</dd>
@@ -28,8 +31,8 @@
     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.VehicleBrand)</dt>
     <dd class="col-sm-9">@Html.DisplayFor(model => model.VehicleBrand)</dd>
 
-    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DepartureTime)</dt>
-    <dd class="col-sm-9">@Html.DisplayFor(model => model.DepartureTime)</dd>
+    @* <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DepartureTime)</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.DepartureTime)</dd> *@
 
     <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Color)</dt>
     <dd class="col-sm-9">

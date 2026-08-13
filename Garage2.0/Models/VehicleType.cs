@@ -2,18 +2,16 @@
 
 namespace Garage2._0.Models
 {
-    public enum VehicleType
+    public class VehicleType
     {
-        [Display(Name = "Car")]
-        Car,
+        public int Id { get; set; }
 
-        [Display(Name = "Bus")]
-        Bus,
+        [Required(ErrorMessage = "Name is required.")]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "Name must be 1-50 characters.")]
+        [Display(Name = "Vehicle Type")]
+        public required string Name { get; set; }
 
-        [Display(Name = "Truck")]
-        Truck,
-
-        [Display(Name = "Motorcycle")]
-        Motorcycle,
+        [Display(Name = "Vehicles")]
+        public ICollection<Vehicle> Vehicles { get; set; } = [];
     }
 }

@@ -1,14 +1,14 @@
-@model IEnumerable<Garage2._0.Models.VehicleOverViewModel>
+@model IEnumerable<Garage2._0.Models.ViewModels.VehicleOverViewModel>
+@inject IVehicleTypeDropDownService dropdownService
 
 @{
     ViewData["Title"] = "Garage Overview";
 }
 
 <div class="page-header">
-    <h1>Parked Vehicles</h1>
+    <h1>Vehicles</h1>
     <hr />
 </div>
-
 
 <form asp-action="Index" method="get" class="mb-4">
     <div class="row g-3 align-items-end">
@@ -18,19 +18,9 @@
         </div>
         <div class="col-md-4">
             <label class="form-label">Vehicle Type</label>
-            <select class="form-select" name="type">
-                <option value=""></option>
-                @foreach (var type in Html.GetEnumSelectList<VehicleType>())
-                {
-                    if (ViewData["type"]?.ToString() == type.Text)
-                    {
-                        <option value="@type.Value" selected>@type.Text</option>
-                    }
-                    else
-                    {
-                        <option value="@type.Value">@type.Text</option>
-                    }
-                }
+            <select class="form-select" name="type" 
+                 asp-items="@await dropdownService.GetVehicleTypesAsync()">
+                <option value="">-- Select Vehicle Type --</option>
             </select>
         </div>
         <div class="col-md-4">
@@ -80,14 +70,17 @@ else
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.VehicleType</td>
+                    <td>@item.VehicleType.Name</td>
                     <td>@item.RegistrationNumber</td>
                     <td>@item.ArrivalTime</td>
                     <td>@item.ParkedDuration</td>
                     <td class="text-end">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Details</a>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Check Out</a>
+                        @if (item.ArrivalTime.HasValue)
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Check Out</a>
+                        }
                     </td>
                 </tr>
             }
