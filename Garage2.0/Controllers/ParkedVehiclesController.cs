@@ -430,6 +430,62 @@ public class ParkedVehiclesController : Controller  //viewmodel för att visa en
         return View("Receipt", receiptViewModel);
     }
 
+    public async Task<IActionResult> History()
+    {
+        var userId = _userManager.GetUserId(User);
+
+        var history = await _context.ParkingSessions
+            .Where(ps => ps.DepartureTime != null)
+            .Where(ps => ps.Vehicle.ApplicationUserId == userId)
+            .OrderByDescending(ps => ps.DepartureTime)
+            .Select(ps => new ParkingHistoryViewModel
+            {
+                ParkingSessionId = ps.Id,
+                RegistrationNumber = ps.Vehicle.RegistrationNumber,
+                DepartureTime = ps.DepartureTime!.Value,
+                TotalPrice = ps.TotalCost ?? 0
+            })
+            .ToListAsync();
+
+        return View(history);
+    }
+
+
+    public async Task<IActionResult> Receipt(int id)
+    {
+        var parkingSession = await _context.ParkingSessions
+            .Include(p => p.Vehicle)
+            .ThenInclude(v => v.VehicleType)
+            .Include(p => p.Vehicle)
+            .ThenInclude(v => v.ApplicationUser)
+            .Include(p => p.ParkingSpot)
+            .FirstOrDefaultAsync(p => p.Id == id && p.DepartureTime != null);
+
+        if (parkingSession == null) return NotFound();
+
+        if (!IsAuthorized(parkingSession.Vehicle)) return Unauthorized();
+
+        var receiptViewModel = new ReceiptViewModel
+        {
+            Id = parkingSession.Vehicle.Id,
+            RegistrationNumber = parkingSession.Vehicle.RegistrationNumber,
+            VehicleType = parkingSession.Vehicle.VehicleType,
+            VehicleBrand = parkingSession.Vehicle.VehicleBrand,
+            VehicleModel = parkingSession.Vehicle.VehicleModel,
+            Color = parkingSession.Vehicle.Color,
+            Wheels = parkingSession.Vehicle.Wheels,
+            ArrivalTime = parkingSession.ArrivalTime,
+            DepartureTime = parkingSession.DepartureTime!.Value,
+            TotalPrice = parkingSession.TotalCost!.Value,
+            UserFirstName = parkingSession.Vehicle.ApplicationUser.FirstName,
+            UserLastName = parkingSession.Vehicle.ApplicationUser.LastName,
+            ParkingSpotNumber = parkingSession.ParkingSpot.Number,
+            HourlyRate = parkingSession.HourlyRateForParking
+        };
+
+        return View("Receipt", receiptViewModel);
+    }
+
     private bool ParkedVehicleExists(int? id)
     {
         return _context.Vehicles.Any(e => e.Id == id);
