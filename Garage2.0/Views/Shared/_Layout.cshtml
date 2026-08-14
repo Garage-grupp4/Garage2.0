@@ -49,6 +49,12 @@
                                             Parking Spots
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="GarageStatistics"
+                                           asp-action="Index">
+                                            Garage Statistics
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         }
@@ -64,6 +70,11 @@
                                 + Register Vehicle
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-primary" asp-area="" asp-controller="ParkedVehicles" asp-action="History">
+                                History
+                            </a>
+                       </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

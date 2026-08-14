@@ -26,6 +26,7 @@ namespace Garage2._0
                     opt.UseSqlite(connectionString);
             });
 
+            // builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<GarageContext>();
 
             // builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
 
