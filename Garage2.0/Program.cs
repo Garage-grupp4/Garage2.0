@@ -26,6 +26,8 @@ namespace Garage2._0
                     opt.UseSqlite(connectionString);
             });
 
+            // builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<GarageContext>();
+
             // builder.Services.AddDbContext<GarageContext>(options => options.UseSqlite(connectionString));
 
             builder.Services.Configure<ParkingPricingOptions>(builder.Configuration.GetSection("ParkingPricing"));
@@ -65,7 +67,7 @@ namespace Garage2._0
             using (var scope = app.Services.CreateScope()) // öppna scope
             {
                 var db = scope.ServiceProvider.GetRequiredService<GarageContext>(); // hämta DbContext
-                await SeedData.Initialize(db,scope.ServiceProvider); // gör jobbet
+                await SeedData.Initialize(db, scope.ServiceProvider); // gör jobbet
             } // scope stängs, db disposas
 
             // Configure the HTTP request pipeline.
